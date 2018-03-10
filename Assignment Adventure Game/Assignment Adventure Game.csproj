@@ -63,7 +63,7 @@
     <Content Include="Content\Images\Doors\Door 1.png" />
     <Content Include="Content\Images\Doors\Door 2.png" />
     <Content Include="Content\Images\Doors\Door 3.png" />
-    <Content Include="Content\Images\Floors\Floor 1.png" />
+    <Content Include="Content\Images\Floors\Wood Flooring.png" />
     <Content Include="Content\Images\Items\Key 1.png" />
     <Content Include="Content\Images\Items\Key 2.png" />
     <Content Include="Content\Images\Items\Key 3.png" />
@@ -77,6 +77,7 @@
     <Content Include="Content\Images\Player\Stand Right.png" />
     <Content Include="Content\Images\Player\Stand Left.png" />
     <Content Include="Content\Images\Player\Stand Up.png" />
+    <Content Include="Content\Images\Walls\Grey North Brick Wall.png" />
     <Content Include="Content\Images\Weapons\G Launcher.png" />
     <Content Include="Content\Images\Weapons\Pistol.png" />
     <Content Include="Content\Images\Weapons\SMG.png" />

@@ -37,6 +37,9 @@ namespace Assignment_Adventure_Game
         Room currentRoom, room1, room2;
         #endregion
 
+        // North Wall test.
+        Texture2D northWall;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -141,6 +144,8 @@ namespace Assignment_Adventure_Game
 
             #endregion
 
+
+
             #region Load doors and rooms.
             entranceDoor = new Door(Content.Load<Texture2D>("Images/Doors/Door 1"),
                 new Vector2(780, 10),
@@ -157,17 +162,19 @@ namespace Assignment_Adventure_Game
             room2Exits.Add(exitDoor);
 
             // Load Rooms.
-            room1 = new Room(Content.Load<Texture2D>("Images/Floors/Floor 1"),
+            room1 = new Room(Content.Load<Texture2D>("Images/Floors/Wood Flooring"),
                 room1Items,
                 room1Exits);
 
-            room2 = new Room(Content.Load<Texture2D>("Images/Floors/Floor 1"),
+            room2 = new Room(Content.Load<Texture2D>("Images/Floors/Wood Flooring"),
                 room2Items,
                 room2Exits);
 
             // Set current room.
             currentRoom = room1;
             #endregion
+
+            northWall = Content.Load<Texture2D>("Images/Walls/Grey North Brick Wall");
 
             // TODO: use this.Content to load your game content here
         }
@@ -239,13 +246,19 @@ namespace Assignment_Adventure_Game
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-            spriteBatch.Begin();           
+            spriteBatch.Begin();
+
+            
 
             // Draw the current room.
             currentRoom.Draw(spriteBatch);
 
+            spriteBatch.Draw(northWall, new Vector2(0, 0), Color.White);
+
             // Draw the player.
             player.Draw(spriteBatch);
+
+           
 
             spriteBatch.End();
 

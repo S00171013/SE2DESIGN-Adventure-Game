@@ -34,11 +34,12 @@ namespace Assignment_Adventure_Game
         // Create list of doors for room1 and room 2.
         List<Door> room1Exits, room2Exits;
 
-        Room currentRoom, room1, room2;
+        Room currentRoom, room1, room2, roomToChange;
         #endregion
 
         // North Wall test.
         Texture2D northWall;
+
 
         public Game1()
         {
@@ -148,18 +149,16 @@ namespace Assignment_Adventure_Game
 
             #region Load doors and rooms.
             entranceDoor = new Door(Content.Load<Texture2D>("Images/Doors/Door 1"),
-                new Vector2(780, 10),
-                Color.White,
-                room2);
+               new Vector2(780, 10),
+               Color.White,
+               room2,
+               true);
 
             exitDoor = new Door(Content.Load<Texture2D>("Images/Doors/Door 2"),
                 new Vector2(780, 650),
                 Color.White,
-                room1);
-
-            // Add dors to Door lists.
-            room1Exits.Add(entranceDoor);
-            room2Exits.Add(exitDoor);
+                room1,
+                true);          
 
             // Load Rooms.
             room1 = new Room(Content.Load<Texture2D>("Images/Floors/Wood Flooring"),
@@ -170,11 +169,18 @@ namespace Assignment_Adventure_Game
                 room2Items,
                 room2Exits);
 
+            entranceDoor.Destination = room2;
+            exitDoor.Destination = room1;
+
+            // Add doors to Door lists.
+            room1Exits.Add(entranceDoor);
+            room2Exits.Add(exitDoor);
+
             // Set current room.
             currentRoom = room1;
             #endregion
 
-            northWall = Content.Load<Texture2D>("Images/Walls/Grey North Brick Wall");
+           // northWall = Content.Load<Texture2D>("Images/Walls/Grey North Brick Wall");
 
             // TODO: use this.Content to load your game content here
         }
@@ -204,32 +210,17 @@ namespace Assignment_Adventure_Game
             // Update the player.
             player.Update(gameTime);
 
-            #region Rough door collision check. - Much refactoring needed here.
+            #region Check for door collisions and change room accordingly.
             foreach(Door exit in currentRoom.Exits)
             {
-                if(exit.CheckCollision(player) == true && currentRoom == room1)
+                if(exit.CheckCollision(player) == true)
                 {
-                    // Change room, this should be done in the Door's ChangeRoom method.
-                    currentRoom = room2;
-
-                    // Alt method - Doesn't work yet.
-                    //currentRoom = exit.ChangeRoom();
-
-                    // Set new position. - Hardcoded for now.
-                   player.Position = exitDoor.Position + new Vector2(0, -100);               
-                }
-
-                else if (exit.CheckCollision(player) == true && currentRoom == room2)
-                {
-                    // Change room, this should be done in the Door's ChangeRoom method.
-                    currentRoom = room1;
-
-                    // Set new position. - Hardcoded for now.
-                    player.Position = entranceDoor.Position + new Vector2(0, 100);
-                }
+                    // Change the current room using the entered door's ChangeRoom() method.                                                       
+                    currentRoom = exit.ChangeRoom(player);
+                    break;           
+                }               
             }
             #endregion
-
 
             // Update the current room.
             currentRoom.Update(gameTime);
@@ -253,7 +244,7 @@ namespace Assignment_Adventure_Game
             // Draw the current room.
             currentRoom.Draw(spriteBatch);
 
-            spriteBatch.Draw(northWall, new Vector2(0, 0), Color.White);
+            //spriteBatch.Draw(northWall, new Vector2(0, 0), Color.White);
 
             // Draw the player.
             player.Draw(spriteBatch);

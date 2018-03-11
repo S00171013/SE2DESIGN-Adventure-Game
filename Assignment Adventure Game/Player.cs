@@ -169,5 +169,12 @@ namespace Assignment_Adventure_Game
             MoveDown = moveDownIn;
             #endregion
         }
+
+        // This method is called whenever the player goes through a door.
+        public void Enter(Vector2 newPositionIn)
+        {
+            // Chnage the player's position to where they entered the room.
+            Position = newPositionIn;
+        }
     }
 }

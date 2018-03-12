@@ -25,22 +25,24 @@ namespace Assignment_Adventure_Game
         Item key1, key2, key3, key4;
 
         // Create item lists.
-        List<Item> room1Items, room2Items;
+        List<Item> room1Items, room2Items, room3Items;
+        #endregion
+
+        #region Wall Experimentation.
+        // Create wall textures.        
+        // Wall Texture Dictionary.
+        Dictionary<string, Texture2D> area1Walls = new Dictionary<string, Texture2D>();
         #endregion
 
         #region Room and Door Experimentation.
-        Door entranceDoor, exitDoor;
+        Door room1NorthDoor, room1WestDoor, room2SouthDoor, room3EastDoor;
 
-        // Create list of doors for room1 and room 2.
-        List<Door> room1Exits, room2Exits;
+        // Create list of doors for room 1 and room 2.
+        List<Door> room1Exits, room2Exits, room3Exits;
 
-        Room currentRoom, room1, room2, roomToChange;
+        Room currentRoom, room1, room2, room3;
         #endregion
-
-        // North Wall test.
-        Texture2D northWall;
-
-
+      
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -106,82 +108,111 @@ namespace Assignment_Adventure_Game
             // Instantiate lists.
             room1Items = new List<Item>();
             room2Items = new List<Item>();
+            room3Items = new List<Item>();
 
             room1Exits = new List<Door>();
             room2Exits = new List<Door>();
+            room3Exits = new List<Door>();
+
+            // Load wall textures
+            area1Walls = Loader.ContentLoad<Texture2D>(Content, "Images/Walls/Area1");
 
             #region Item list setup
             // Load items.
             key1 = new Item(Content.Load<Texture2D>("Images/Items/Key 1"),
-                new Vector2(400, 600),
+                new Vector2(400, 550),
                 Color.White,
-                "Opens red doors.",
-                "You found a red key.");
+                "Opens silver doors.",
+                "You found a silver key.");
 
             key2 = new Item(Content.Load<Texture2D>("Images/Items/Key 2"),
-                new Vector2(450, 600),
+                new Vector2(450, 540),
                 Color.White,
-                "Opens green doors.",
-                "You found a green key.");
+                "Opens gold doors.",
+                "You found a gold key.");
 
             key3 = new Item(Content.Load<Texture2D>("Images/Items/Key 3"),
                 new Vector2(200, 300),
                 Color.White,
-                "Opens yellow doors.",
-                "You found a yellow key.");
+                "Opens green doors.",
+                "You found a green key.");
 
             key4 = new Item(Content.Load<Texture2D>("Images/Items/Key 4"),
                 new Vector2(100, 500),
                 Color.White,
-                "Opens yellow doors.",
-                "You found a yellow key.");
+                "Opens blue doors.",
+                "You found a blue key.");
 
             // Add to the item lists for each room.
-            room1Items.Add(key1);
-            room1Items.Add(key2);
+            room2Items.Add(key1);
+            room3Items.Add(key2);          
+            #endregion
+           
+            // Rooms must be loaded first.
+            #region Load Rooms.
+            room1 = new Room(Content.Load<Texture2D>("Images/Floors/Wood Flooring"),
+               room1Items,
+               room1Exits,
+               area1Walls);
 
-            room2Items.Add(key3);
-            room2Items.Add(key4);
+            room2 = new Room(Content.Load<Texture2D>("Images/Floors/Wood Flooring"),
+                room2Items,
+                room2Exits,
+                area1Walls);
 
+            room3 = new Room(Content.Load<Texture2D>("Images/Floors/Wood Flooring"),
+                room3Items,
+                room3Exits,
+                area1Walls);
             #endregion
 
-
-
-            #region Load doors and rooms.
-            entranceDoor = new Door(Content.Load<Texture2D>("Images/Doors/Door 1"),
-               new Vector2(780, 10),
+           
+            #region Room 1 doors
+            room1NorthDoor = new Door(Content.Load<Texture2D>("Images/Doors/A Open/Open Door North"),
+               new Vector2(780, 47),
                Color.White,
                room2,
                true);
 
-            exitDoor = new Door(Content.Load<Texture2D>("Images/Doors/Door 2"),
-                new Vector2(780, 650),
-                Color.White,
-                room1,
-                true);          
-
-            // Load Rooms.
-            room1 = new Room(Content.Load<Texture2D>("Images/Floors/Wood Flooring"),
-                room1Items,
-                room1Exits);
-
-            room2 = new Room(Content.Load<Texture2D>("Images/Floors/Wood Flooring"),
-                room2Items,
-                room2Exits);
-
-            entranceDoor.Destination = room2;
-            exitDoor.Destination = room1;
-
-            // Add doors to Door lists.
-            room1Exits.Add(entranceDoor);
-            room2Exits.Add(exitDoor);
-
-            // Set current room.
-            currentRoom = room1;
+            room1WestDoor = new Door(Content.Load<Texture2D>("Images/Doors/B Silver/Silver Door West"),
+               new Vector2(43, 107),
+               Color.White,
+               room3,
+               false);
             #endregion
 
-           // northWall = Content.Load<Texture2D>("Images/Walls/Grey North Brick Wall");
+            #region Room 2 doors.
+            room2SouthDoor = new Door(Content.Load<Texture2D>("Images/Doors/A Open/Open Door South"),
+                new Vector2(780, 648),
+                Color.White,
+                room1,
+                true);
+            #endregion
 
+            #region Room 3 doors.
+            room3EastDoor = new Door(Content.Load<Texture2D>("Images/Doors/B Silver/Silver Door East"),
+               new Vector2(1214, 104),
+               Color.White,
+               room1,
+               false);
+            #endregion
+
+            #region Add doors to Door lists. This code should be altered. It is not fully functional.
+            // Room 1      
+            room1Exits.Add(room1NorthDoor);
+            room1Exits.Add(room1WestDoor);
+
+            // Room 2
+            room2Exits.Add(room2SouthDoor);
+
+            // Room 3
+            room3Exits.Add(room3EastDoor);
+            #endregion
+
+            // Set initial room.
+            currentRoom = room1;
+            
+                     
             // TODO: use this.Content to load your game content here
         }
 
@@ -209,6 +240,12 @@ namespace Assignment_Adventure_Game
 
             // Update the player.
             player.Update(gameTime);
+
+            // The following method is for collisions. It should be moved somewhere else.
+            foreach (AnimatedSprite wall in currentRoom.Walls)
+            {
+                player.Collision(wall);
+            }
 
             #region Check for door collisions and change room accordingly.
             foreach(Door exit in currentRoom.Exits)
@@ -238,19 +275,13 @@ namespace Assignment_Adventure_Game
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-
-            
-
+           
             // Draw the current room.
-            currentRoom.Draw(spriteBatch);
-
-            //spriteBatch.Draw(northWall, new Vector2(0, 0), Color.White);
+            currentRoom.Draw(spriteBatch);           
 
             // Draw the player.
             player.Draw(spriteBatch);
-
-           
-
+         
             spriteBatch.End();
 
             base.Draw(gameTime);

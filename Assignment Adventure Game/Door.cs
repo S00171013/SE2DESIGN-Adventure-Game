@@ -58,7 +58,7 @@ namespace Assignment_Adventure_Game
                     break;
                 }
 
-                else if (exit.doorLocation == location.WEST)
+                else if (exit.doorLocation == location.EAST)
                 {
                     player.Enter(exit.Position + new Vector2(-100, 0));
                     break;
@@ -77,6 +77,7 @@ namespace Assignment_Adventure_Game
             // Set up variable to return location.
             location locationToReturn = location.NONE;
 
+            #region Determine which wall the door is placed on.
             // If the door is placed vertically...
             if (verticalIn == true)
             {
@@ -106,6 +107,7 @@ namespace Assignment_Adventure_Game
                     locationToReturn = location.EAST;
                 }
             }
+            #endregion
 
             // Return the wall the door is placed on.
             return locationToReturn;

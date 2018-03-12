@@ -25,6 +25,9 @@ namespace Assignment_Adventure_Game
         public Item EquippedItem;
         public Weapon EquippedWeapon;
 
+        public Rectangle BoundingRectangle { get; set; }
+        Vector2 previousPosition;
+
         // Declare bool to keep track of whether the player has been updated initially. - There's likely a way to fix this.
         bool setUp;
 
@@ -55,13 +58,18 @@ namespace Assignment_Adventure_Game
             Tint = tint;
             FrameCount = frameCount;
 
+            
+
+            
+
             // The original example had this running in the player's Update method. - In case problems arise later with different rooms.
             gameScreen = myGame.GraphicsDevice.Viewport;
         }
 
         public virtual void Update(GameTime gameTime)
         {
-           
+            previousPosition = Position;
+
 
             #region Update the player sprite initially so that it draws to the screen. - Should be fixed later.
             if (setUp == false)
@@ -175,6 +183,14 @@ namespace Assignment_Adventure_Game
         {
             // Chnage the player's position to where they entered the room.
             Position = newPositionIn;
+        }
+
+        public void Collision(AnimatedSprite other)
+        {
+            if (Bounds.Intersects(other.Bounds))
+            {
+                Position = previousPosition;
+            }           
         }
     }
 }

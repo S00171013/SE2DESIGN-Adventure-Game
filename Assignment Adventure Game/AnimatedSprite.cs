@@ -77,9 +77,13 @@ namespace Assignment_Adventure_Game
 
         // Caller has a spritebatch ready and has already called Begin
         public void Draw(SpriteBatch sp)
-        {            
-            sp.Draw(Image, Position, SourceRectangle, Tint);           
-            // sp.Draw(Image, Position, Tint);
+        {
+            sp.Draw(Image, Position, SourceRectangle, Tint);
+        }
+
+        public void DrawNoRect(SpriteBatch sp)
+        {
+            sp.Draw(Image, Position, Tint);                 
         }
 
         public void Draw(SpriteBatch sp, SpriteFont sfont)

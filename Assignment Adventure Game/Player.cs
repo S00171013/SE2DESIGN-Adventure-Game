@@ -79,76 +79,8 @@ namespace Assignment_Adventure_Game
             }
             #endregion
 
-            #region Handle movement.
-            if (Keyboard.GetState().IsKeyDown(Keys.A))
-            {
-                // Left             
-                Move(new Vector2(-5, 0));
-                Image = MoveLeft;
-
-                playerDirection = Direction.LEFT;
-
-                UpdateAnimation(gameTime);
-            }
-
-            else if (Keyboard.GetState().IsKeyDown(Keys.D))
-            {
-                // Right                
-                Move(new Vector2(5, 0));
-                Image = MoveRight;
-
-                playerDirection = Direction.RIGHT;
-                 
-                UpdateAnimation(gameTime);
-            }
-
-            else if (Keyboard.GetState().IsKeyDown(Keys.W))
-            {
-                // Up                
-                Move(new Vector2(0, -5));
-                Image = MoveUp;
-
-                playerDirection = Direction.UP;
-                      
-                UpdateAnimation(gameTime);
-            }
-
-            else if (Keyboard.GetState().IsKeyDown(Keys.S))
-            {
-                // Down              
-                Move(new Vector2(0, 5));
-
-                Image = MoveDown;
-
-                playerDirection = Direction.DOWN;
-                    
-                UpdateAnimation(gameTime);
-            }
-
-            // Display the correct idle sprite depending on the player's current orientation.
-            else
-            {
-                switch (playerDirection)
-                {
-                    case Direction.DOWN:
-                        Image = FaceDown;
-                        break;
-
-                    case Direction.UP:
-                        Image = FaceUp;
-                        break;
-
-                    case Direction.LEFT:
-                        Image = FaceLeft;
-                        break;
-
-                    case Direction.RIGHT:
-                        Image = FaceRight;
-                        break;
-                }
-            }
-            #endregion
-
+            // Call the method that allows the player to move.
+            HandleMovement(gameTime);
 
             #region Make sure the player stays in the bounds of the screen.
             Position = Vector2.Clamp(Position, Vector2.Zero,
@@ -178,6 +110,81 @@ namespace Assignment_Adventure_Game
             #endregion
         }
 
+        public void HandleMovement(GameTime gameTime)
+        {
+            #region Handle movement
+            if (Keyboard.GetState().IsKeyDown(Keys.A))
+            {
+                // Left             
+                Move(new Vector2(-5, 0));
+                Image = MoveLeft;
+
+                playerDirection = Direction.LEFT;
+
+                UpdateAnimation(gameTime);
+            }
+
+            else if (Keyboard.GetState().IsKeyDown(Keys.D))
+            {
+                // Right                
+                Move(new Vector2(5, 0));
+                Image = MoveRight;
+
+                playerDirection = Direction.RIGHT;
+
+                UpdateAnimation(gameTime);
+            }
+
+            else if (Keyboard.GetState().IsKeyDown(Keys.W))
+            {
+                // Up                
+                Move(new Vector2(0, -5));
+                Image = MoveUp;
+
+                playerDirection = Direction.UP;
+
+                UpdateAnimation(gameTime);
+            }
+
+            else if (Keyboard.GetState().IsKeyDown(Keys.S))
+            {
+                // Down              
+                Move(new Vector2(0, 5));
+
+                Image = MoveDown;
+
+                playerDirection = Direction.DOWN;
+
+                UpdateAnimation(gameTime);
+            }
+            #endregion
+
+            #region Otherwise, if the player is idle...
+            // Display the correct idle sprite depending on the player's current orientation.
+            else
+            {
+                switch (playerDirection)
+                {
+                    case Direction.DOWN:
+                        Image = FaceDown;
+                        break;
+
+                    case Direction.UP:
+                        Image = FaceUp;
+                        break;
+
+                    case Direction.LEFT:
+                        Image = FaceLeft;
+                        break;
+
+                    case Direction.RIGHT:
+                        Image = FaceRight;
+                        break;
+                }
+            }
+            #endregion                   
+        }
+
         // This method is called whenever the player goes through a door.
         public void Enter(Vector2 newPositionIn)
         {
@@ -185,6 +192,7 @@ namespace Assignment_Adventure_Game
             Position = newPositionIn;
         }
 
+        // This method determines what will happen when the player collides with a slid object.
         public void Collision(AnimatedSprite other)
         {
             if (Bounds.Intersects(other.Bounds))

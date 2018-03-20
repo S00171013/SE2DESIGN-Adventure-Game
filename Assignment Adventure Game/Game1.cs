@@ -219,7 +219,7 @@ namespace Assignment_Adventure_Game
             #endregion
 
             // Set initial room.
-            currentRoom = room3;                               
+            currentRoom = room1;                               
             // TODO: use this.Content to load your game content here
         }
 

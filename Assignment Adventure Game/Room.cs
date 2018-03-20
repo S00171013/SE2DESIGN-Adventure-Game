@@ -17,23 +17,21 @@ namespace Assignment_Adventure_Game
         List<Item> roomItems;
         public List<Door> Exits { get; set; }
         public List<Wall> Walls;
-
-        Dictionary<string, Texture2D> walls;
+       
 
         // Constructor
-        public Room(Texture2D backgroundIn, List<Item> roomItemsIn, List<Door> exitsIn, Dictionary<string, Texture2D> wallsIn)
+        public Room(Texture2D backgroundIn, List<Item> roomItemsIn, Dictionary<string, Texture2D> wallsIn)
         {
             Background = backgroundIn;
             roomItems = roomItemsIn;
-            Exits = exitsIn;
 
+            Exits = new List<Door>();
             Walls = new List<Wall>();
 
             // Set up walls.
             SetUpWalls(wallsIn);
         }
-
-        
+       
         public virtual void Update(GameTime gtIn)
         {
             // Draw Items.
@@ -66,6 +64,11 @@ namespace Assignment_Adventure_Game
             {
                 exit.Draw(spIn);
             }       
+        }
+
+        public void GetExits(List<Door> exitsIn)
+        {          
+            Exits = exitsIn;
         }
 
         public void SetUpWalls(Dictionary<string, Texture2D> wallTexturesIn)

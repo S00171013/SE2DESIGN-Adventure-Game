@@ -64,7 +64,17 @@ namespace Assignment_Adventure_Game
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here        
+            // TODO: Add your initialization logic here  
+             
+            // Instantiate lists.
+            room1Items = new List<Item>();
+            room2Items = new List<Item>();
+            room3Items = new List<Item>();
+
+            room1Exits = new List<Door>();
+            room2Exits = new List<Door>();
+            room3Exits = new List<Door>();
+
             base.Initialize();
         }
 
@@ -104,16 +114,7 @@ namespace Assignment_Adventure_Game
             player.GetAnimations(lookingLeft, lookingRight, lookingUp, lookingDown,
                 movingLeft, movingRight, movingUp, movingDown);
             #endregion
-
-            // Instantiate lists.
-            room1Items = new List<Item>();
-            room2Items = new List<Item>();
-            room3Items = new List<Item>();
-
-            room1Exits = new List<Door>();
-            room2Exits = new List<Door>();
-            room3Exits = new List<Door>();
-
+           
             // Load wall textures
             area1Walls = Loader.ContentLoad<Texture2D>(Content, "Images/Walls/Area1");
 
@@ -123,25 +124,29 @@ namespace Assignment_Adventure_Game
                 new Vector2(400, 550),
                 Color.White,
                 "Opens silver doors.",
-                "You found a silver key.");
+                "You found a silver key.",
+                1);
 
             key2 = new Item(Content.Load<Texture2D>("Images/Items/Key 2"),
                 new Vector2(450, 540),
                 Color.White,
                 "Opens gold doors.",
-                "You found a gold key.");
+                "You found a gold key.",
+                1);
 
             key3 = new Item(Content.Load<Texture2D>("Images/Items/Key 3"),
                 new Vector2(200, 300),
                 Color.White,
                 "Opens green doors.",
-                "You found a green key.");
+                "You found a green key.",
+                1);
 
             key4 = new Item(Content.Load<Texture2D>("Images/Items/Key 4"),
                 new Vector2(100, 500),
                 Color.White,
                 "Opens blue doors.",
-                "You found a blue key.");
+                "You found a blue key.",
+                1);
 
             // Add to the item lists for each room.
             room2Items.Add(key1);
@@ -151,42 +156,48 @@ namespace Assignment_Adventure_Game
             // Rooms must be loaded first.
             #region Load Rooms.
             room1 = new Room(Content.Load<Texture2D>("Images/Floors/Wood Flooring"),
-               room1Items,
-               room1Exits,
+               room1Items,               
                area1Walls);
 
             room2 = new Room(Content.Load<Texture2D>("Images/Floors/Wood Flooring"),
-                room2Items,
-                room2Exits,
+                room2Items,         
                 area1Walls);
 
             room3 = new Room(Content.Load<Texture2D>("Images/Floors/Wood Flooring"),
-                room3Items,
-                room3Exits,
+                room3Items,               
                 area1Walls);
-            #endregion
+            #endregion            
 
-           
-            #region Room 1 doors
+            #region Room 1 doors.
             room1NorthDoor = new Door(Content.Load<Texture2D>("Images/Doors/A Open/Open Door North"),
                new Vector2(780, 47),
                Color.White,
                room2,
-               true);
+               true,
+               1);
 
             room1WestDoor = new Door(Content.Load<Texture2D>("Images/Doors/B Silver/Silver Door West"),
                new Vector2(43, 107),
                Color.White,
                room3,
-               false);
-            #endregion
+               false,
+               1);
 
+            // Add exits to list.
+            room1Exits.Add(room1NorthDoor);
+            room1Exits.Add(room1WestDoor);           
+            #endregion
+           
             #region Room 2 doors.
             room2SouthDoor = new Door(Content.Load<Texture2D>("Images/Doors/A Open/Open Door South"),
                 new Vector2(780, 648),
                 Color.White,
                 room1,
-                true);
+                true,
+                1);
+
+            // Add exits to list.
+            room2Exits.Add(room2SouthDoor);            
             #endregion
 
             #region Room 3 doors.
@@ -194,25 +205,21 @@ namespace Assignment_Adventure_Game
                new Vector2(1214, 104),
                Color.White,
                room1,
-               false);
-            #endregion
+               false,
+               1);
 
-            #region Add doors to Door lists. This code should be altered. It is not fully functional.
-            // Room 1      
-            room1Exits.Add(room1NorthDoor);
-            room1Exits.Add(room1WestDoor);
-
-            // Room 2
-            room2Exits.Add(room2SouthDoor);
-
-            // Room 3
+            // Add exits to list.
             room3Exits.Add(room3EastDoor);
             #endregion
 
+            #region Add the exit lists to their appropriate rooms.          
+            room1.GetExits(room1Exits);
+            room2.GetExits(room2Exits);
+            room3.GetExits(room3Exits);
+            #endregion
+
             // Set initial room.
-            currentRoom = room1;
-            
-                     
+            currentRoom = room3;                               
             // TODO: use this.Content to load your game content here
         }
 

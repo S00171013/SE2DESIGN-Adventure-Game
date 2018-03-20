@@ -16,8 +16,8 @@ namespace Assignment_Adventure_Game
 
         // Constructor.
         public Weapon(Texture2D image, Vector2 position, Color tint, string descIn, string exInfoIn,
-            int ammoCapacityIn)
-            : base(image, position, tint, descIn, exInfoIn)
+            int ammoCapacityIn, int frameCount)
+            : base(image, position, tint, descIn, exInfoIn, frameCount)
         {
             // Set bounds.
             Bounds = new Rectangle((int)position.X, (int)position.Y, image.Width, image.Height);

@@ -8,59 +8,61 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Assignment_Adventure_Game
 {
-    class Door : SimpleSprite
+    class Door : AnimatedSprite
     {
         // Properties.
         public Room Destination { get; set; }
 
-        public enum location { NORTH, SOUTH, WEST, EAST, NONE};
+        public enum location { NORTH, SOUTH, WEST, EAST};
         public location doorLocation;
         private bool vertical = false;
 
+        // Declare const int for the distance the player appears from each door they come from.
+        const int DOOR_DISTANCE = 100;
+
         // Constructor
-        public Door(Texture2D image, Vector2 position, Color tint, Room destinationIn, bool verticalIn) : base(image, position, tint)
+        public Door(Texture2D image, Vector2 position, Color tint, Room destinationIn, bool verticalIn, int frameCount) : base(image, position, tint, frameCount)
         {
+            // Set door destination.
             Destination = destinationIn;
 
             // Set whether or not the door is displayed vertically. If false, the door is displayed horizontally.
             vertical = verticalIn;
 
             // Get the door's location.
-            doorLocation = GetLocation(Position, vertical);
-            
+            doorLocation = GetLocation(Position, vertical);       
         }
        
-
         // This method is called when the player goes through the door. 
         public Room ChangeRoom(Player player)
         {
             #region Get the location of the door and ensure the player appears in the appropriate entrance of the next room.
             // Check each door that exists in the next room.
-            foreach(Door exit in Destination.Exits)
+            foreach (Door exit in Destination.Exits)
             {
                 // The following if statements will determine whether the other side of the door is on the north, south, west or east wall of the next room.
                 // When the other side's wall location is determined, the player will appear in front of the door in the next room.
-                if(exit.doorLocation == location.NORTH)
-                {                  
-                    player.Enter(exit.Position + new Vector2(0, 100));
+                if (exit.doorLocation == location.NORTH && this.doorLocation == location.SOUTH)
+                {
+                    player.Enter(exit.Position + new Vector2(0, DOOR_DISTANCE));
                     break;
                 }
 
-                else  if (exit.doorLocation == location.SOUTH)
+                else if (exit.doorLocation == location.SOUTH && this.doorLocation == location.NORTH)
                 {
-                    player.Enter(exit.Position + new Vector2(0, -100));
+                    player.Enter(exit.Position + new Vector2(0, -DOOR_DISTANCE));
                     break;
                 }
 
-                else if (exit.doorLocation == location.WEST)
+                else if (exit.doorLocation == location.WEST && this.doorLocation == location.EAST)
                 {
-                    player.Enter(exit.Position + new Vector2(100, 0));
+                    player.Enter(exit.Position + new Vector2(DOOR_DISTANCE, 0));
                     break;
                 }
 
-                else if (exit.doorLocation == location.EAST)
+                else if (exit.doorLocation == location.EAST && this.doorLocation == location.WEST)
                 {
-                    player.Enter(exit.Position + new Vector2(-100, 0));
+                    player.Enter(exit.Position + new Vector2(-DOOR_DISTANCE, 0));
                     break;
                 }
             }
@@ -75,7 +77,7 @@ namespace Assignment_Adventure_Game
             // This method will determine which wall a door is placed on.
 
             // Set up variable to return location.
-            location locationToReturn = location.NONE;
+            location locationToReturn = new location();
 
             #region Determine which wall the door is placed on.
             // If the door is placed vertically...
@@ -112,7 +114,6 @@ namespace Assignment_Adventure_Game
             // Return the wall the door is placed on.
             return locationToReturn;
         }
-
         }
     }
 

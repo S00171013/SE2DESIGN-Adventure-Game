@@ -8,14 +8,14 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Assignment_Adventure_Game
 {
-    class Item: SimpleSprite
+    class Item: AnimatedSprite
     {
         // Properties
         public string Description { get; set; }
         public string ExamineInfo { get; set; }
 
         // Constructor.
-        public Item(Texture2D image, Vector2 position, Color tint, string descIn, string exInfoIn) : base(image, position, tint)
+        public Item(Texture2D image, Vector2 position, Color tint, string descIn, string exInfoIn, int frameCount) : base(image, position, tint, frameCount)
         {
             Description = descIn;
             ExamineInfo = exInfoIn;

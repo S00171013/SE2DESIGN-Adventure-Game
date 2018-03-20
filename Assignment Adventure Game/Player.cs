@@ -25,6 +25,9 @@ namespace Assignment_Adventure_Game
         public Item EquippedItem;
         public Weapon EquippedWeapon;
 
+        // Declare const int for the player's speed.
+        const int PLAYER_SPEED = 5;
+
         public Rectangle BoundingRectangle { get; set; }
         Vector2 previousPosition;
 
@@ -53,31 +56,15 @@ namespace Assignment_Adventure_Game
         public Player(Game gameIn, Texture2D image, Vector2 position, Color tint, int frameCount) : base(image, position, tint, frameCount)
         {
             myGame = gameIn;
-            Image = image;
-            Position = position;
-            Tint = tint;
-            FrameCount = frameCount;
-
-            
-
-            
-
+                                 
             // The original example had this running in the player's Update method. - In case problems arise later with different rooms.
             gameScreen = myGame.GraphicsDevice.Viewport;
         }
 
         public virtual void Update(GameTime gameTime)
         {
-            previousPosition = Position;
-
-
-            #region Update the player sprite initially so that it draws to the screen. - Should be fixed later.
-            if (setUp == false)
-            {
-                UpdateAnimation(gameTime);
-                setUp = true;
-            }
-            #endregion
+            // Set previous position, this is needed to handle collision.
+            previousPosition = Position;            
 
             // Call the method that allows the player to move.
             HandleMovement(gameTime);
@@ -86,9 +73,7 @@ namespace Assignment_Adventure_Game
             Position = Vector2.Clamp(Position, Vector2.Zero,
                 new Vector2(gameScreen.Width - Image.Width,
                 gameScreen.Height - Image.Height));
-            #endregion
-
-            
+            #endregion           
         }
 
         // This method will take in the player animations that have already been loaded in the game1 class.
@@ -116,7 +101,7 @@ namespace Assignment_Adventure_Game
             if (Keyboard.GetState().IsKeyDown(Keys.A))
             {
                 // Left             
-                Move(new Vector2(-5, 0));
+                Move(new Vector2(-PLAYER_SPEED, 0));
                 Image = MoveLeft;
 
                 playerDirection = Direction.LEFT;
@@ -127,7 +112,7 @@ namespace Assignment_Adventure_Game
             else if (Keyboard.GetState().IsKeyDown(Keys.D))
             {
                 // Right                
-                Move(new Vector2(5, 0));
+                Move(new Vector2(PLAYER_SPEED, 0));
                 Image = MoveRight;
 
                 playerDirection = Direction.RIGHT;
@@ -138,7 +123,7 @@ namespace Assignment_Adventure_Game
             else if (Keyboard.GetState().IsKeyDown(Keys.W))
             {
                 // Up                
-                Move(new Vector2(0, -5));
+                Move(new Vector2(0, -PLAYER_SPEED));
                 Image = MoveUp;
 
                 playerDirection = Direction.UP;
@@ -149,7 +134,7 @@ namespace Assignment_Adventure_Game
             else if (Keyboard.GetState().IsKeyDown(Keys.S))
             {
                 // Down              
-                Move(new Vector2(0, 5));
+                Move(new Vector2(0, PLAYER_SPEED));
 
                 Image = MoveDown;
 
@@ -188,7 +173,7 @@ namespace Assignment_Adventure_Game
         // This method is called whenever the player goes through a door.
         public void Enter(Vector2 newPositionIn)
         {
-            // Chnage the player's position to where they entered the room.
+            // Change the player's position to where they entered the room.
             Position = newPositionIn;
         }
 

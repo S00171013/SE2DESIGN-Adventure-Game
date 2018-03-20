@@ -37,7 +37,8 @@ namespace Assignment_Adventure_Game
 
         // Constructor
         public AnimatedSprite(Texture2D image, Vector2 position, Color tint, int frameCountIn)
-        {                     
+        {          
+            // Set up properties.           
             Image = image;
             Position = position;
             Tint = tint;
@@ -46,6 +47,12 @@ namespace Assignment_Adventure_Game
             // Width is now width/number of frames
             Bounds = new Rectangle((int)position.X, (int)position.Y, image.Width/FrameCount, image.Height);
 
+            // Set up source rectangle initially. The player sprite won't appear otherwise.
+            SourceRectangle = new Rectangle(
+                currentFrame * Image.Width / FrameCount, // Sprite width
+                0,
+                Image.Width / FrameCount,
+                Image.Height);
         }
 
         public void UpdateAnimation(GameTime gameTime)
@@ -72,7 +79,6 @@ namespace Assignment_Adventure_Game
                 0,
                 Image.Width / FrameCount,
                 Image.Height);
-
         }
 
         // Caller has a spritebatch ready and has already called Begin
@@ -100,7 +106,7 @@ namespace Assignment_Adventure_Game
         }
 
         // Check for collision
-        public void CheckCollision(AnimatedSprite other)
+        public bool CheckCollision(AnimatedSprite other)
         {
             // Rectangle intersects
 
@@ -109,11 +115,13 @@ namespace Assignment_Adventure_Game
             if ((Bounds.Intersects(other.Bounds)))
             {
                 Tint = Color.Red;
+                return true;
             }
 
             else
             {
                 Tint = Color.White;
+                return false;
             }
         }
     }

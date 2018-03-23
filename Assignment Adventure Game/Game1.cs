@@ -111,8 +111,8 @@ namespace Assignment_Adventure_Game
                 2); // Frames          
 
             // Send these textures to the Player class.
-            player.GetAnimations(lookingLeft, lookingRight, lookingUp, lookingDown,
-                movingLeft, movingRight, movingUp, movingDown);
+            player.GetAnimations(lookingDown, lookingUp, lookingLeft, lookingRight,
+                movingDown, movingUp, movingLeft, movingRight);
             #endregion
            
             // Load wall textures

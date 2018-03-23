@@ -27,12 +27,8 @@ namespace Assignment_Adventure_Game
 
         // Declare const int for the player's speed.
         const int PLAYER_SPEED = 5;
-
-        public Rectangle BoundingRectangle { get; set; }
-        Vector2 previousPosition;
-
-        // Declare bool to keep track of whether the player has been updated initially. - There's likely a way to fix this.
-        bool setUp;
+        
+        Vector2 previousPosition;       
 
         #region Declare variables to handle animation for this class.
         // Set up enum to keep track of player orientation.    
@@ -40,16 +36,16 @@ namespace Assignment_Adventure_Game
         public Direction playerDirection;
 
         // Idle Textures
+        public Texture2D FaceDown { get; set; }
+        public Texture2D FaceUp { get; set; }
         public Texture2D FaceLeft { get; set; }
         public Texture2D FaceRight { get; set; }
-        public Texture2D FaceUp { get; set; }
-        public Texture2D FaceDown { get; set; }
 
         // Movement Textures.
-        public Texture2D MoveLeft { get; set; }
-        public Texture2D MoveRight { get; set; }
-        public Texture2D MoveUp { get; set; }
         public Texture2D MoveDown { get; set; }
+        public Texture2D MoveUp { get; set; }      
+        public Texture2D MoveLeft { get; set; }
+        public Texture2D MoveRight { get; set; }     
         #endregion
 
         // Constructor.
@@ -77,21 +73,21 @@ namespace Assignment_Adventure_Game
         }
 
         // This method will take in the player animations that have already been loaded in the game1 class.
-        public void GetAnimations(Texture2D faceLeftIn, Texture2D faceRightIn, Texture2D faceUpIn, Texture2D faceDownIn,
-            Texture2D moveLeftIn, Texture2D moveRightIn, Texture2D moveUpIn, Texture2D moveDownIn)
+        public void GetAnimations(Texture2D faceDownIn, Texture2D faceUpIn, Texture2D faceLeftIn, Texture2D faceRightIn,
+            Texture2D moveDownIn, Texture2D moveUpIn, Texture2D moveLeftIn, Texture2D moveRightIn)
         {
             #region Take in Idle textures.
+            FaceDown = faceDownIn;
+            FaceUp = faceUpIn;          
             FaceLeft = faceLeftIn;
             FaceRight = faceRightIn;
-            FaceUp = faceUpIn;
-            FaceDown = faceDownIn;
             #endregion
 
             #region Take in Movement textures.
-            MoveLeft = moveLeftIn;
-            MoveRight = moveRightIn;
-            MoveUp = moveUpIn;
             MoveDown = moveDownIn;
+            MoveUp = moveUpIn;        
+            MoveLeft = moveLeftIn;
+            MoveRight = moveRightIn;        
             #endregion
         }
 
@@ -177,7 +173,7 @@ namespace Assignment_Adventure_Game
             Position = newPositionIn;
         }
 
-        // This method determines what will happen when the player collides with a slid object.
+        // This method determines what will happen when the player collides with a solid object.
         public void Collision(AnimatedSprite other)
         {
             if (Bounds.Intersects(other.Bounds))

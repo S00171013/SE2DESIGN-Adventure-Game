@@ -29,12 +29,8 @@ namespace Assignment_Adventure_Game
         public int currentFrame = 0;
         int numberOfFrames = 0;
         int millisecondsBetweenFrames = 200;
-        float elapsedTime = 0;
-
-        // Properties.... later
-        
-
-
+        float elapsedTime = 0;       
+       
         // Constructor
         public AnimatedSprite(Texture2D image, Vector2 position, Color tint, int frameCountIn)
         {          

@@ -14,7 +14,7 @@ namespace Assignment_Adventure_Game
         public Texture2D Background { get; set; }
 
         // Fields.
-        List<Item> roomItems;
+        public List<Item> RoomItems;
         public List<Door> Exits { get; set; }
         public List<Wall> Walls;
        
@@ -23,7 +23,7 @@ namespace Assignment_Adventure_Game
         public Room(Texture2D backgroundIn, List<Item> roomItemsIn, Dictionary<string, Texture2D> wallsIn)
         {
             Background = backgroundIn;
-            roomItems = roomItemsIn;
+            RoomItems = roomItemsIn;
 
             Exits = new List<Door>();
             Walls = new List<Wall>();
@@ -35,7 +35,7 @@ namespace Assignment_Adventure_Game
         public virtual void Update(GameTime gtIn)
         {
             // Draw Items.
-            foreach (Item item in roomItems)
+            foreach (Item item in RoomItems)
             {
                 item.Update(gtIn);
             }       
@@ -53,7 +53,7 @@ namespace Assignment_Adventure_Game
             }
 
             // Draw Items.
-            foreach (Item item in roomItems)
+            foreach (Item item in RoomItems)
             {
                 item.Draw(spIn);
                 

@@ -397,3 +397,9 @@
 /processorParam:TextureFormat=Color
 /build:Images/Doors/C Gold/Gold Door West.png
 
+#begin SFX/collect.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/collect.wav
+

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -26,6 +27,9 @@ namespace Assignment_Adventure_Game
 
         // Create item lists.
         List<Item> room1Items, room2Items, room3Items;
+
+        // Container for new item that is added to the player's inventory. - There's likely another solution.
+        Item itemToAdd;
         #endregion
 
         #region Wall Experimentation.
@@ -42,7 +46,10 @@ namespace Assignment_Adventure_Game
 
         Room currentRoom, room1, room2, room3;
         #endregion
-      
+
+        // Sound Effects
+        SoundEffect collect;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -120,28 +127,32 @@ namespace Assignment_Adventure_Game
 
             #region Item list setup
             // Load items.
-            key1 = new Item(Content.Load<Texture2D>("Images/Items/Key 1"),
+            key1 = new Item("Silver Key",
+                Content.Load<Texture2D>("Images/Items/Key 1"),
                 new Vector2(400, 550),
                 Color.White,
                 "Opens silver doors.",
                 "You found a silver key.",
                 1);
 
-            key2 = new Item(Content.Load<Texture2D>("Images/Items/Key 2"),
+            key2 = new Item("Gold Key",
+                Content.Load<Texture2D>("Images/Items/Key 2"),
                 new Vector2(450, 540),
                 Color.White,
                 "Opens gold doors.",
                 "You found a gold key.",
                 1);
 
-            key3 = new Item(Content.Load<Texture2D>("Images/Items/Key 3"),
+            key3 = new Item("Green Key",
+                Content.Load<Texture2D>("Images/Items/Key 3"),
                 new Vector2(200, 300),
                 Color.White,
                 "Opens green doors.",
                 "You found a green key.",
                 1);
 
-            key4 = new Item(Content.Load<Texture2D>("Images/Items/Key 4"),
+            key4 = new Item("Blue Key",
+                Content.Load<Texture2D>("Images/Items/Key 4"),
                 new Vector2(100, 500),
                 Color.White,
                 "Opens blue doors.",
@@ -169,14 +180,16 @@ namespace Assignment_Adventure_Game
             #endregion            
 
             #region Room 1 doors.
-            room1NorthDoor = new Door(Content.Load<Texture2D>("Images/Doors/A Open/Open Door North"),
+            room1NorthDoor = new Door("No Key",
+               Content.Load<Texture2D>("Images/Doors/A Open/Open Door North"),
                new Vector2(780, 47),
                Color.White,
                room2,
                true,
                1);
 
-            room1WestDoor = new Door(Content.Load<Texture2D>("Images/Doors/B Silver/Silver Door West"),
+            room1WestDoor = new Door(key1.Name,
+               Content.Load<Texture2D>("Images/Doors/B Silver/Silver Door West"),
                new Vector2(43, 107),
                Color.White,
                room3,
@@ -189,7 +202,8 @@ namespace Assignment_Adventure_Game
             #endregion
            
             #region Room 2 doors.
-            room2SouthDoor = new Door(Content.Load<Texture2D>("Images/Doors/A Open/Open Door South"),
+            room2SouthDoor = new Door("No Key",
+                Content.Load<Texture2D>("Images/Doors/A Open/Open Door South"),
                 new Vector2(780, 648),
                 Color.White,
                 room1,
@@ -201,7 +215,8 @@ namespace Assignment_Adventure_Game
             #endregion
 
             #region Room 3 doors.
-            room3EastDoor = new Door(Content.Load<Texture2D>("Images/Doors/B Silver/Silver Door East"),
+            room3EastDoor = new Door(key1.Name,
+               Content.Load<Texture2D>("Images/Doors/B Silver/Silver Door East"),
                new Vector2(1214, 104),
                Color.White,
                room1,
@@ -217,6 +232,9 @@ namespace Assignment_Adventure_Game
             room2.GetExits(room2Exits);
             room3.GetExits(room3Exits);
             #endregion
+
+            // Load collect sound effect.
+            collect = Content.Load<SoundEffect>("SFX/collect");
 
             // Set initial room.
             currentRoom = room1;                               
@@ -254,20 +272,60 @@ namespace Assignment_Adventure_Game
                 player.Collision(wall);
             }
 
-            #region Check for door collisions and change room accordingly.
+            #region Check for door collisions and change room accordingly. Somewhat messy for now, but it works.
             foreach(Door exit in currentRoom.Exits)
             {
                 if(exit.CheckCollision(player) == true)
                 {
-                    // Change the current room using the entered door's ChangeRoom() method.                                                       
-                    currentRoom = exit.ChangeRoom(player);
-                    break;           
+                    if (exit.KeyRequired == "No Key")
+                    {
+                        // Change the current room using the entered door's ChangeRoom() method.                                                       
+                        currentRoom = exit.ChangeRoom(player);
+                        break;
+                    }
+
+                    else
+                    {
+                        foreach (Item key in player.Inventory)
+                        {
+                            if (key.Name == exit.KeyRequired)
+                            {
+                                // Change the current room using the entered door's ChangeRoom() method.                                                       
+                                currentRoom = exit.ChangeRoom(player);
+                                break;
+                            }
+                        }
+                        break;
+                    }    
                 }               
             }
             #endregion
 
             // Update the current room.
             currentRoom.Update(gameTime);
+
+            #region Code to allow player to collect items. - There's likely a more elegant way to do this.
+            foreach(Item item in currentRoom.RoomItems)
+            {
+                player.Collect(item);      
+                
+                if(player.Collect(item) == true)
+                {
+                    itemToAdd = item;
+
+                    // Play sound effect.
+                    collect.Play();
+                    break;
+                }         
+            }
+
+            // Add the new item to the player's inventory.
+            if (itemToAdd != null)
+            {
+                currentRoom.RoomItems.Remove(itemToAdd);
+                itemToAdd = null;
+            }
+            #endregion                       
 
             base.Update(gameTime);
         }
@@ -287,8 +345,8 @@ namespace Assignment_Adventure_Game
             currentRoom.Draw(spriteBatch);           
 
             // Draw the player.
-            player.Draw(spriteBatch);
-         
+            player.Draw(spriteBatch);            
+
             spriteBatch.End();
 
             base.Draw(gameTime);

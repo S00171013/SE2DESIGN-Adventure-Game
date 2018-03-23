@@ -28,7 +28,7 @@ namespace Assignment_Adventure_Game
         // Declare const int for the player's speed.
         const int PLAYER_SPEED = 5;
         
-        Vector2 previousPosition;       
+        Vector2 previousPosition;
 
         #region Declare variables to handle animation for this class.
         // Set up enum to keep track of player orientation.    
@@ -55,6 +55,10 @@ namespace Assignment_Adventure_Game
                                  
             // The original example had this running in the player's Update method. - In case problems arise later with different rooms.
             gameScreen = myGame.GraphicsDevice.Viewport;
+
+            // Set up player inventory and weapons lists.
+            Inventory = new List<Item>();
+            Weapons = new List<Weapon>();
         }
 
         public virtual void Update(GameTime gameTime)
@@ -70,8 +74,15 @@ namespace Assignment_Adventure_Game
                 new Vector2(gameScreen.Width - Image.Width,
                 gameScreen.Height - Image.Height));
             #endregion           
+           
+            // Update the player's inventory.
+            foreach(Item item in this.Inventory)
+            {
+                item.Update(gameTime);
+                
+            }
         }
-
+             
         // This method will take in the player animations that have already been loaded in the game1 class.
         public void GetAnimations(Texture2D faceDownIn, Texture2D faceUpIn, Texture2D faceLeftIn, Texture2D faceRightIn,
             Texture2D moveDownIn, Texture2D moveUpIn, Texture2D moveLeftIn, Texture2D moveRightIn)
@@ -181,5 +192,18 @@ namespace Assignment_Adventure_Game
                 Position = previousPosition;
             }           
         }
+
+        public bool Collect(Item itemPickedUp)
+        {
+            if (Bounds.Intersects(itemPickedUp.Bounds))
+            {
+                Inventory.Add(itemPickedUp);
+                return true;
+            }
+
+            return false;
+        }       
+
+        // Methods to add: Examine(etc), Attack(etc), Shoot(etc), ViewInventory(etc), ViewWeapons(etc). 
     }
 }

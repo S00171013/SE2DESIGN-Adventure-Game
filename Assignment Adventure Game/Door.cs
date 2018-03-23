@@ -11,9 +11,10 @@ namespace Assignment_Adventure_Game
     class Door : AnimatedSprite
     {
         // Properties.
+        public string KeyRequired { get; set; }
         public Room Destination { get; set; }
 
-        public enum location { NORTH, SOUTH, WEST, EAST};
+        public enum location { NORTH, SOUTH, WEST, EAST };
         public location doorLocation;
         private bool vertical = false;
 
@@ -21,8 +22,11 @@ namespace Assignment_Adventure_Game
         const int DOOR_DISTANCE = 100;
 
         // Constructor
-        public Door(Texture2D image, Vector2 position, Color tint, Room destinationIn, bool verticalIn, int frameCount) : base(image, position, tint, frameCount)
+        public Door(string keyRequiredIn, Texture2D image, Vector2 position, Color tint, Room destinationIn, bool verticalIn, int frameCount) : base(image, position, tint, frameCount)
         {
+            // Set key required to open this door.
+            KeyRequired = keyRequiredIn;
+
             // Set door destination.
             Destination = destinationIn;
 
@@ -30,13 +34,13 @@ namespace Assignment_Adventure_Game
             vertical = verticalIn;
 
             // Get the door's location.
-            doorLocation = GetLocation(Position, vertical);       
+            doorLocation = GetLocation(Position, vertical);
         }
-       
+
         // This method is called when the player goes through the door. 
         public Room ChangeRoom(Player player)
         {
-            #region Get the location of the door and ensure the player appears in the appropriate entrance of the next room.
+            #region Ensure the player appears in the appropriate entrance of the next room.
             // Check each door that exists in the next room.
             foreach (Door exit in Destination.Exits)
             {
@@ -114,6 +118,6 @@ namespace Assignment_Adventure_Game
             // Return the wall the door is placed on.
             return locationToReturn;
         }
-        }
     }
+}
 

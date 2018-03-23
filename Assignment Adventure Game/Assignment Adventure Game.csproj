@@ -94,6 +94,7 @@
     <Content Include="Content\Images\Weapons\G Launcher.png" />
     <Content Include="Content\Images\Weapons\Pistol.png" />
     <Content Include="Content\Images\Weapons\SMG.png" />
+    <Content Include="Content\SFX\collect.wav" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>

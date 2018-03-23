@@ -11,12 +11,14 @@ namespace Assignment_Adventure_Game
     class Item: AnimatedSprite
     {
         // Properties
+        public string Name { get; set; }
         public string Description { get; set; }
         public string ExamineInfo { get; set; }
 
         // Constructor.
-        public Item(Texture2D image, Vector2 position, Color tint, string descIn, string exInfoIn, int frameCount) : base(image, position, tint, frameCount)
+        public Item(string nameIn, Texture2D image, Vector2 position, Color tint, string descIn, string exInfoIn, int frameCount) : base(image, position, tint, frameCount)
         {
+            Name = nameIn;
             Description = descIn;
             ExamineInfo = exInfoIn;
 

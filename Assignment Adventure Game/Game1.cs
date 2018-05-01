@@ -15,6 +15,34 @@ namespace Assignment_Adventure_Game
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        // Set up enum for the game's states.
+        public enum gameState { TITLE, CONTROLS, GAMEPLAY, INFO, INVENTORY, GAMEOVER }
+        public gameState currentState;
+
+        #region Declare texture dictionaries for the game's menu screens and other UI elements.
+        // Main Menu        
+        Dictionary<string, Texture2D> mainMenuTextures = new Dictionary<string, Texture2D>();        
+        // Controls Menu       
+        Dictionary<string, Texture2D> controlsTextures = new Dictionary<string, Texture2D>();        
+        // Game Over Screen       
+        Dictionary<string, Texture2D> gameOverTextures = new Dictionary<string, Texture2D>();
+        #endregion
+
+        #region Declare menu option objects for each of the game's screens.
+        // Main Menu
+        MenuOption startGameOp, viewControlsOp, quitGameOp;
+        // Controls Menu
+        MenuOption returnToTitleOp;
+        // Game Over Menu
+        MenuOption tryAgainOp, quitOp;
+
+        // Declare menu option array for each screen.
+        MenuOption[] mainMenuOptions, controlsOptions, gameOverOptions;
+        #endregion
+
+        // Declare Cursor object.
+        Cursor cursor;
+
         // Declare Player variable.
         Player player;
 
@@ -93,6 +121,47 @@ namespace Assignment_Adventure_Game
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            #region Load UI textures
+            // Main menu textures.
+            mainMenuTextures = Loader.ContentLoad<Texture2D>(Content, "Images/Screens/1 Main Menu");
+            // Controls screen textures.
+            controlsTextures = Loader.ContentLoad<Texture2D>(Content, "Images/Screens/2 Controls Screen");
+            // Game over screen textures.
+            gameOverTextures = Loader.ContentLoad<Texture2D>(Content, "Images/Screens/3 Game Over Screen");
+            #endregion
+
+            #region Create menu options - startGameOp is shared between the main menu and the controls menu.
+            // Main
+            startGameOp = new MenuOption(this, mainMenuTextures["1 Start Game"], new Vector2(640, 550),
+                Color.White, 1, "Start Game", false);
+            viewControlsOp = new MenuOption(this, mainMenuTextures["2 View Controls"], new Vector2(640, 600),
+                Color.White, 1, "View Controls", false);
+            quitGameOp = new MenuOption(this, mainMenuTextures["3 Quit Game"], new Vector2(640, 600),
+                Color.White, 1, "Quit Game", false);
+
+            // Controls           
+            returnToTitleOp = new MenuOption(this, controlsTextures["1 Return to Title"], new Vector2(640, 550),
+                Color.White, 1, "Return to Title", false);
+
+            // Game Over
+            tryAgainOp = new MenuOption(this, gameOverTextures["1 Try Again"], new Vector2(640, 550),
+                Color.White, 1, "Try Again", false);
+            quitGameOp = new MenuOption(this, gameOverTextures["2 Quit"], new Vector2(640, 600),
+                Color.White, 1, "Quit", false);
+
+            // Set up arrays.
+            mainMenuOptions = new MenuOption[3] { startGameOp, viewControlsOp, quitGameOp };
+            controlsOptions = new MenuOption[2] { startGameOp, returnToTitleOp };
+            gameOverOptions = new MenuOption[2] { tryAgainOp, quitOp };
+            #endregion
+
+            // Create cursor and set it's initial position to that of the first main menu option.
+            cursor = new Cursor(this, Content.Load<Texture2D>("Images/Screens/Small Cursor"),
+                new Rectangle((int)startGameOp.Position.X, (int)startGameOp.Position.Y, 100, 100));
+
+            // Set initial gameplay state.
+            currentState = gameState.CONTROLS;
 
             #region Load Player.
             #region Load Idle Player sprites.
@@ -263,70 +332,89 @@ namespace Assignment_Adventure_Game
                 Exit();
             }
 
-            // Update the player.
-            player.Update(gameTime);
-
-            // The following method is for collisions. It should be moved somewhere else.
-            foreach (AnimatedSprite wall in currentRoom.Walls)
+            switch(currentState)
             {
-                player.Collision(wall);
-            }
+                case gameState.TITLE:
+                    break;
 
-            #region Check for door collisions and change room accordingly. Somewhat messy for now, but it works.
-            foreach(Door exit in currentRoom.Exits)
-            {
-                if(exit.CheckCollision(player) == true)
-                {
-                    if (exit.KeyRequired == "No Key")
+                case gameState.CONTROLS:
+                    break;
+
+                case gameState.GAMEPLAY:
+                    #region Gameplay operations.
+                    // Update the player.
+                    player.Update(gameTime);
+
+                    // The following method is for collisions. It should be moved somewhere else.
+                    foreach (AnimatedSprite wall in currentRoom.Walls)
                     {
-                        // Change the current room using the entered door's ChangeRoom() method.                                                       
-                        currentRoom = exit.ChangeRoom(player);
-                        break;
+                        player.Collision(wall);
                     }
 
-                    else
+                    #region Check for door collisions and change room accordingly. Somewhat messy for now, but it works.
+                    foreach (Door exit in currentRoom.Exits)
                     {
-                        foreach (Item key in player.Inventory)
+                        if (exit.CheckCollision(player) == true)
                         {
-                            if (key.Name == exit.KeyRequired)
+                            if (exit.KeyRequired == "No Key")
                             {
                                 // Change the current room using the entered door's ChangeRoom() method.                                                       
                                 currentRoom = exit.ChangeRoom(player);
                                 break;
                             }
+
+                            else
+                            {
+                                foreach (Item key in player.Inventory)
+                                {
+                                    if (key.Name == exit.KeyRequired)
+                                    {
+                                        // Change the current room using the entered door's ChangeRoom() method.                                                       
+                                        currentRoom = exit.ChangeRoom(player);
+                                        break;
+                                    }
+                                }
+                                break;
+                            }
                         }
-                        break;
-                    }    
-                }               
-            }
-            #endregion
+                    }
+                    #endregion
 
-            // Update the current room.
-            currentRoom.Update(gameTime);
+                    // Update the current room.
+                    currentRoom.Update(gameTime);
 
-            #region Code to allow player to collect items. - There's likely a more elegant way to do this.
-            foreach(Item item in currentRoom.RoomItems)
-            {
-                player.Collect(item);      
-                
-                if(player.Collect(item) == true)
-                {
-                    itemToAdd = item;
+                    #region Code to allow player to collect items. - There's likely a more elegant way to do this.
+                    foreach (Item item in currentRoom.RoomItems)
+                    {
+                        player.Collect(item);
 
-                    // Play sound effect.
-                    collect.Play();
+                        if (player.Collect(item) == true)
+                        {
+                            itemToAdd = item;
+
+                            // Play sound effect.
+                            collect.Play();
+                            break;
+                        }
+                    }
+
+                    // Add the new item to the player's inventory.
+                    if (itemToAdd != null)
+                    {
+                        currentRoom.RoomItems.Remove(itemToAdd);
+                        itemToAdd = null;
+                    }
+                    #endregion
+                    #endregion
                     break;
-                }         
-            }
 
-            // Add the new item to the player's inventory.
-            if (itemToAdd != null)
-            {
-                currentRoom.RoomItems.Remove(itemToAdd);
-                itemToAdd = null;
-            }
-            #endregion                       
+                case gameState.INFO:
+                    break;
 
+                case gameState.GAMEOVER:
+                    break;
+            }
+                     
             base.Update(gameTime);
         }
 
@@ -340,12 +428,34 @@ namespace Assignment_Adventure_Game
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-           
-            // Draw the current room.
-            currentRoom.Draw(spriteBatch);           
 
-            // Draw the player.
-            player.Draw(spriteBatch);            
+            switch (currentState)
+            {
+                case gameState.TITLE:
+                    spriteBatch.Draw(mainMenuTextures["0 Main Menu"], new Vector2(0, 0), Color.White);
+                    break;
+
+                case gameState.CONTROLS:
+                    spriteBatch.Draw(controlsTextures["0 Controls Screen 3"], new Vector2(0, 0), Color.White);
+                    break;
+
+                case gameState.GAMEPLAY:
+                    #region What to draw during gameplay.
+                    // Draw the current room.
+                    currentRoom.Draw(spriteBatch);
+
+                    // Draw the player.
+                    player.Draw(spriteBatch);
+                    #endregion
+                    break;
+
+                case gameState.INFO:
+                    break;
+
+                case gameState.GAMEOVER:
+                    spriteBatch.Draw(gameOverTextures["0 Game Over"], new Vector2(0, 0), Color.White);
+                    break;
+            }                      
 
             spriteBatch.End();
 

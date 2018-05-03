@@ -21,9 +21,9 @@ namespace Assignment_Adventure_Game
 
         #region Declare texture dictionaries for the game's menu screens and other UI elements.
         // Main Menu        
-        Dictionary<string, Texture2D> mainMenuTextures = new Dictionary<string, Texture2D>();        
+        Dictionary<string, Texture2D> mainMenuTextures = new Dictionary<string, Texture2D>();
         // Controls Menu       
-        Dictionary<string, Texture2D> controlsTextures = new Dictionary<string, Texture2D>();        
+        Dictionary<string, Texture2D> controlsTextures = new Dictionary<string, Texture2D>();
         // Game Over Screen       
         Dictionary<string, Texture2D> gameOverTextures = new Dictionary<string, Texture2D>();
         #endregion
@@ -135,11 +135,11 @@ namespace Assignment_Adventure_Game
 
             #region Create menu options - startGameOp is shared between the main menu and the controls menu.
             // Main
-            startGameOp = new MenuOption(this, mainMenuTextures["3 Start Game"], new Vector2(640, 550),
+            startGameOp = new MenuOption(this, mainMenuTextures["4 Start Game"], new Vector2(GraphicsDevice.Viewport.Width/2-mainMenuTextures["4 Start Game"].Width/2, 440),
                 Color.White, 1, "Start Game", false);
-            viewControlsOp = new MenuOption(this, mainMenuTextures["4 View Controls"], new Vector2(640, 600),
+            viewControlsOp = new MenuOption(this, mainMenuTextures["5 View Controls"], new Vector2(GraphicsDevice.Viewport.Width / 2 - mainMenuTextures["5 View Controls"].Width / 2, 490),
                 Color.White, 1, "View Controls", false);
-            quitGameOp = new MenuOption(this, mainMenuTextures["5 Quit Game"], new Vector2(640, 600),
+            quitGameOp = new MenuOption(this, mainMenuTextures["6 Quit Game"], new Vector2(GraphicsDevice.Viewport.Width / 2 - mainMenuTextures["4 Start Game"].Width / 2, 540),
                 Color.White, 1, "Quit Game", false);
 
             // Controls           
@@ -149,7 +149,7 @@ namespace Assignment_Adventure_Game
             // Game Over
             tryAgainOp = new MenuOption(this, gameOverTextures["1 Try Again"], new Vector2(640, 550),
                 Color.White, 1, "Try Again", false);
-            quitGameOp = new MenuOption(this, gameOverTextures["2 Quit"], new Vector2(640, 600),
+            quitOp = new MenuOption(this, gameOverTextures["2 Quit"], new Vector2(640, 600),
                 Color.White, 1, "Quit", false);
 
             // Set up arrays.
@@ -160,7 +160,7 @@ namespace Assignment_Adventure_Game
 
             // Create cursor and set it's initial position to that of the first main menu option.
             cursor = new Cursor(this, Content.Load<Texture2D>("Images/Screens/Small Cursor"),
-                new Rectangle((int)startGameOp.Position.X, (int)startGameOp.Position.Y, 100, 100));
+                new Rectangle((int)startGameOp.Position.X-30, (int)startGameOp.Position.Y+30, 100, 100));
 
             // Set initial gameplay state.
             currentState = gameState.TITLE;
@@ -177,7 +177,7 @@ namespace Assignment_Adventure_Game
             movingLeft = Content.Load<Texture2D>("Images/Player/Move Left");
             movingRight = Content.Load<Texture2D>("Images/Player/Move Right");
             movingUp = Content.Load<Texture2D>("Images/Player/Move Up");
-            movingDown = Content.Load<Texture2D>("Images/Player/Move Down");                     
+            movingDown = Content.Load<Texture2D>("Images/Player/Move Down");
             #endregion
 
             // Load animated player sprite.
@@ -192,7 +192,7 @@ namespace Assignment_Adventure_Game
             player.GetAnimations(lookingDown, lookingUp, lookingLeft, lookingRight,
                 movingDown, movingUp, movingLeft, movingRight);
             #endregion
-           
+
             // Load wall textures
             area1Walls = Loader.ContentLoad<Texture2D>(Content, "Images/Walls/Area1");
 
@@ -232,21 +232,21 @@ namespace Assignment_Adventure_Game
 
             // Add to the item lists for each room.
             room2Items.Add(key1);
-            room3Items.Add(key2);          
+            room3Items.Add(key2);
             #endregion
-           
+
             // Rooms must be loaded first.
             #region Load Rooms.
             room1 = new Room(Content.Load<Texture2D>("Images/Floors/Wood Flooring"),
-               room1Items,               
+               room1Items,
                area1Walls);
 
             room2 = new Room(Content.Load<Texture2D>("Images/Floors/Wood Flooring"),
-                room2Items,         
+                room2Items,
                 area1Walls);
 
             room3 = new Room(Content.Load<Texture2D>("Images/Floors/Wood Flooring"),
-                room3Items,               
+                room3Items,
                 area1Walls);
             #endregion            
 
@@ -269,9 +269,9 @@ namespace Assignment_Adventure_Game
 
             // Add exits to list.
             room1Exits.Add(room1NorthDoor);
-            room1Exits.Add(room1WestDoor);           
+            room1Exits.Add(room1WestDoor);
             #endregion
-           
+
             #region Room 2 doors.
             room2SouthDoor = new Door("No Key",
                 Content.Load<Texture2D>("Images/Doors/A Open/Open Door South"),
@@ -282,7 +282,7 @@ namespace Assignment_Adventure_Game
                 1);
 
             // Add exits to list.
-            room2Exits.Add(room2SouthDoor);            
+            room2Exits.Add(room2SouthDoor);
             #endregion
 
             #region Room 3 doors.
@@ -308,7 +308,7 @@ namespace Assignment_Adventure_Game
             collect = Content.Load<SoundEffect>("SFX/collect");
 
             // Set initial room.
-            currentRoom = room1;                               
+            currentRoom = room1;
             // TODO: use this.Content to load your game content here
         }
 
@@ -334,7 +334,7 @@ namespace Assignment_Adventure_Game
                 Exit();
             }
 
-            switch(currentState)
+            switch (currentState)
             {
                 case gameState.TITLE:
                     cursor.Update();
@@ -418,7 +418,7 @@ namespace Assignment_Adventure_Game
                 case gameState.GAMEOVER:
                     break;
             }
-                     
+
             base.Update(gameTime);
         }
 
@@ -435,8 +435,17 @@ namespace Assignment_Adventure_Game
 
             switch (currentState)
             {
-                case gameState.TITLE:                    
-                    spriteBatch.Draw(mainMenuTextures["1 Main Menu Alt"], new Vector2(0, 0), Color.White);
+                case gameState.TITLE:
+                    // Display background and title.
+                    spriteBatch.Draw(mainMenuTextures["2 Mansion Background"], new Vector2(0, 0), Color.White);
+                    spriteBatch.Draw(mainMenuTextures["3 Title"], new Vector2(450, 240), Color.White);
+
+                    // Display menu options.
+                    for (int i = 0; i < mainMenuOptions.Length; i++)
+                    {
+                        mainMenuOptions[i].Draw(spriteBatch);
+                    }
+
                     cursor.Draw(spriteBatch);
                     break;
 
@@ -460,7 +469,7 @@ namespace Assignment_Adventure_Game
                 case gameState.GAMEOVER:
                     spriteBatch.Draw(gameOverTextures["0 Game Over"], new Vector2(0, 0), Color.White);
                     break;
-            }                      
+            }
 
             spriteBatch.End();
 

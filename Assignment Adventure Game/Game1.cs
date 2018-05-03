@@ -100,7 +100,9 @@ namespace Assignment_Adventure_Game
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here  
-             
+
+            IsMouseVisible = true;
+
             // Instantiate lists.
             room1Items = new List<Item>();
             room2Items = new List<Item>();
@@ -133,11 +135,11 @@ namespace Assignment_Adventure_Game
 
             #region Create menu options - startGameOp is shared between the main menu and the controls menu.
             // Main
-            startGameOp = new MenuOption(this, mainMenuTextures["1 Start Game"], new Vector2(640, 550),
+            startGameOp = new MenuOption(this, mainMenuTextures["3 Start Game"], new Vector2(640, 550),
                 Color.White, 1, "Start Game", false);
-            viewControlsOp = new MenuOption(this, mainMenuTextures["2 View Controls"], new Vector2(640, 600),
+            viewControlsOp = new MenuOption(this, mainMenuTextures["4 View Controls"], new Vector2(640, 600),
                 Color.White, 1, "View Controls", false);
-            quitGameOp = new MenuOption(this, mainMenuTextures["3 Quit Game"], new Vector2(640, 600),
+            quitGameOp = new MenuOption(this, mainMenuTextures["5 Quit Game"], new Vector2(640, 600),
                 Color.White, 1, "Quit Game", false);
 
             // Controls           
@@ -161,7 +163,7 @@ namespace Assignment_Adventure_Game
                 new Rectangle((int)startGameOp.Position.X, (int)startGameOp.Position.Y, 100, 100));
 
             // Set initial gameplay state.
-            currentState = gameState.CONTROLS;
+            currentState = gameState.TITLE;
 
             #region Load Player.
             #region Load Idle Player sprites.
@@ -335,6 +337,8 @@ namespace Assignment_Adventure_Game
             switch(currentState)
             {
                 case gameState.TITLE:
+                    cursor.Update();
+
                     break;
 
                 case gameState.CONTROLS:
@@ -431,8 +435,9 @@ namespace Assignment_Adventure_Game
 
             switch (currentState)
             {
-                case gameState.TITLE:
-                    spriteBatch.Draw(mainMenuTextures["0 Main Menu"], new Vector2(0, 0), Color.White);
+                case gameState.TITLE:                    
+                    spriteBatch.Draw(mainMenuTextures["1 Main Menu Alt"], new Vector2(0, 0), Color.White);
+                    cursor.Draw(spriteBatch);
                     break;
 
                 case gameState.CONTROLS:

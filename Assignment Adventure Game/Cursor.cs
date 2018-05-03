@@ -12,6 +12,8 @@ namespace Assignment_Adventure_Game
     {
         protected Game myGame;
 
+        private float angle = 0;
+
         // Cursor properties.
         public Texture2D Texture { get; }
         public Rectangle BoundingRectangle { get; set; }
@@ -22,5 +24,16 @@ namespace Assignment_Adventure_Game
             Texture = textureIn;
             BoundingRectangle = boundingRectIn;
         } 
+
+        public void Update()
+        {
+            angle += 0.09f;
+        }
+
+        public void Draw(SpriteBatch spIn)
+        {
+            spIn.Draw(Texture, new Vector2(BoundingRectangle.X, BoundingRectangle.Y), null,
+                 Color.White, angle, new Vector2(Texture.Width/2, Texture.Height/2), 0.1f, SpriteEffects.None, 1);
+        }
     }
 }

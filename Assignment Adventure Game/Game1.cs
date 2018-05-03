@@ -489,6 +489,9 @@ namespace Assignment_Adventure_Game
                     #region What to draw on the controls screen.
                     spriteBatch.Draw(controlsTextures["0 Controls Screen 3"], new Vector2(0, 0), Color.White);
 
+                    // Ensure the cursor moves to the appropriate position when changing screens.
+                    cursor.Position = Vector2.Lerp(cursor.Position, new Vector2(controlsOptions[cursor.selectCounter].Position.X - 30, controlsOptions[cursor.selectCounter].Position.Y + 30), 1);
+
                     for (int i = 0; i < controlsOptions.Length; i++)
                     {
                         controlsOptions[i].Draw(spriteBatch);
@@ -523,6 +526,9 @@ namespace Assignment_Adventure_Game
                         gameOverOptions[i].Draw(spriteBatch);
                     }
 
+                    // Ensure the cursor moves to the appropriate position when changing screens.
+                    cursor.Position = Vector2.Lerp(cursor.Position, new Vector2(controlsOptions[cursor.selectCounter].Position.X - 30, controlsOptions[cursor.selectCounter].Position.Y + 30), 1);
+
                     cursor.Draw(spriteBatch);
                     #endregion
                     break;
@@ -536,11 +542,11 @@ namespace Assignment_Adventure_Game
         private void ChangeScreen(MenuOption[] optionsIn)
         {
             // Determine which option has been selected.
-            for (int i = 0; i < mainMenuOptions.Length; i++)
+            for (int i = 0; i < optionsIn.Length; i++)
             {
-                if (mainMenuOptions[i].HighlightedStatus == true)
+                if (optionsIn[i].HighlightedStatus == true)
                 {
-                    selectedOption = mainMenuOptions[i];
+                    selectedOption = optionsIn[i];
                     break;
                 }
             }
@@ -562,7 +568,7 @@ namespace Assignment_Adventure_Game
                 case "Quit Game":
                     Exit();
                     break;
-
+                   
                 case "Return to Title":
                     currentState = gameState.TITLE;
                     cursor.Position = new Vector2(startGameOp.Position.X - 30, startGameOp.Position.Y + 30);

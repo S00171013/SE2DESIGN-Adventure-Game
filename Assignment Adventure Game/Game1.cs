@@ -40,8 +40,9 @@ namespace Assignment_Adventure_Game
         MenuOption[] mainMenuOptions, controlsOptions, gameOverOptions;
         #endregion
 
-        // Declare Cursor object.
+        // Declare Cursor object and selection counter.
         Cursor cursor;
+        int selectCounter = 0;
 
         // Declare Player variable.
         Player player;
@@ -101,6 +102,8 @@ namespace Assignment_Adventure_Game
         {
             // TODO: Add your initialization logic here  
 
+            // Set up input manager and mouse visibility.
+            new InputManager(this);
             IsMouseVisible = true;
 
             // Instantiate lists.
@@ -135,21 +138,28 @@ namespace Assignment_Adventure_Game
 
             #region Create menu options - startGameOp is shared between the main menu and the controls menu.
             // Main
-            startGameOp = new MenuOption(this, mainMenuTextures["4 Start Game"], new Vector2(GraphicsDevice.Viewport.Width/2-mainMenuTextures["4 Start Game"].Width/2, 440),
+            startGameOp = new MenuOption(this, mainMenuTextures["4 Start Game"], new Vector2(GraphicsDevice.Viewport.Width / 2 - mainMenuTextures["4 Start Game"].Width / 2, 440),
                 Color.White, 1, "Start Game", false);
+
+            // Since "Start Game" is highlighted by default, send "true" to its method that handles whether it is highlighted or not.
+            startGameOp.GetHighlightedStatus(true);
+
             viewControlsOp = new MenuOption(this, mainMenuTextures["5 View Controls"], new Vector2(GraphicsDevice.Viewport.Width / 2 - mainMenuTextures["5 View Controls"].Width / 2, 490),
                 Color.White, 1, "View Controls", false);
             quitGameOp = new MenuOption(this, mainMenuTextures["6 Quit Game"], new Vector2(GraphicsDevice.Viewport.Width / 2 - mainMenuTextures["4 Start Game"].Width / 2, 540),
                 Color.White, 1, "Quit Game", false);
 
             // Controls           
-            returnToTitleOp = new MenuOption(this, controlsTextures["1 Return to Title"], new Vector2(640, 550),
+            returnToTitleOp = new MenuOption(this, controlsTextures["1 Return to Title"], new Vector2(GraphicsDevice.Viewport.Width-controlsTextures["1 Return to Title"].Width, 480),
                 Color.White, 1, "Return to Title", false);
 
             // Game Over
-            tryAgainOp = new MenuOption(this, gameOverTextures["1 Try Again"], new Vector2(640, 550),
+            tryAgainOp = new MenuOption(this, gameOverTextures["1 Try Again"], new Vector2(GraphicsDevice.Viewport.Width/2 - gameOverTextures["1 Try Again"].Width/2, 600),
                 Color.White, 1, "Try Again", false);
-            quitOp = new MenuOption(this, gameOverTextures["2 Quit"], new Vector2(640, 600),
+
+            tryAgainOp.GetHighlightedStatus(true);
+
+            quitOp = new MenuOption(this, gameOverTextures["2 Quit"], new Vector2(GraphicsDevice.Viewport.Width / 2 - gameOverTextures["1 Try Again"].Width / 2, 650),
                 Color.White, 1, "Quit", false);
 
             // Set up arrays.
@@ -159,11 +169,11 @@ namespace Assignment_Adventure_Game
             #endregion
 
             // Create cursor and set it's initial position to that of the first main menu option.
-            cursor = new Cursor(this, Content.Load<Texture2D>("Images/Screens/Small Cursor"),
-                new Rectangle((int)startGameOp.Position.X-30, (int)startGameOp.Position.Y+30, 100, 100));
+            cursor = new Cursor(this, Content.Load<Texture2D>("Images/Screens/V Small Cursor"),
+                new Vector2(startGameOp.Position.X-30, startGameOp.Position.Y+30));
 
             // Set initial gameplay state.
-            currentState = gameState.TITLE;
+            currentState = gameState.GAMEOVER;
 
             #region Load Player.
             #region Load Idle Player sprites.
@@ -337,11 +347,12 @@ namespace Assignment_Adventure_Game
             switch (currentState)
             {
                 case gameState.TITLE:
-                    cursor.Update();
-
+                    // Update the cursor so that it can move between options.
+                    cursor.Update(mainMenuOptions);                   
                     break;
 
                 case gameState.CONTROLS:
+                    cursor.Update(controlsOptions);
                     break;
 
                 case gameState.GAMEPLAY:
@@ -416,6 +427,7 @@ namespace Assignment_Adventure_Game
                     break;
 
                 case gameState.GAMEOVER:
+                    cursor.Update(gameOverOptions);
                     break;
             }
 
@@ -436,6 +448,7 @@ namespace Assignment_Adventure_Game
             switch (currentState)
             {
                 case gameState.TITLE:
+                    #region What to draw on the title screen.
                     // Display background and title.
                     spriteBatch.Draw(mainMenuTextures["2 Mansion Background"], new Vector2(0, 0), Color.White);
                     spriteBatch.Draw(mainMenuTextures["3 Title"], new Vector2(450, 240), Color.White);
@@ -446,11 +459,28 @@ namespace Assignment_Adventure_Game
                         mainMenuOptions[i].Draw(spriteBatch);
                     }
 
+                    // Update the menu's "Start Game" option. This must be done since this option is shared between the title screen and the controls menu.
+                    startGameOp.Position = new Vector2(GraphicsDevice.Viewport.Width / 2 - mainMenuTextures["4 Start Game"].Width / 2, 440);
+
+                    // Draw the cursor.
                     cursor.Draw(spriteBatch);
+                    #endregion
                     break;
 
                 case gameState.CONTROLS:
+                    #region What to draw on the controls screen.
                     spriteBatch.Draw(controlsTextures["0 Controls Screen 3"], new Vector2(0, 0), Color.White);
+                  
+                    for (int i = 0; i < controlsOptions.Length; i++)
+                    {
+                        controlsOptions[i].Draw(spriteBatch);
+                    }
+
+                    // Update the menu's "Start Game" option.
+                    startGameOp.Position = new Vector2(GraphicsDevice.Viewport.Width - startGameOp.Image.Width, 420);              
+
+                    cursor.Draw(spriteBatch);
+                    #endregion
                     break;
 
                 case gameState.GAMEPLAY:
@@ -467,13 +497,22 @@ namespace Assignment_Adventure_Game
                     break;
 
                 case gameState.GAMEOVER:
+                    #region What to draw on the controls screen.
                     spriteBatch.Draw(gameOverTextures["0 Game Over"], new Vector2(0, 0), Color.White);
+
+                    for (int i = 0; i < controlsOptions.Length; i++)
+                    {
+                        gameOverOptions[i].Draw(spriteBatch);
+                    }                   
+
+                    cursor.Draw(spriteBatch);
+                    #endregion
                     break;
             }
 
             spriteBatch.End();
 
             base.Draw(gameTime);
-        }
+        }     
     }
 }

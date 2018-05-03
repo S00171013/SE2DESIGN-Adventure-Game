@@ -45,6 +45,7 @@
     <Compile Include="Cursor.cs" />
     <Compile Include="Door.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="InputManager.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="Loader.cs" />
     <Compile Include="MenuOption.cs" />
@@ -102,6 +103,7 @@
     <Content Include="Content\Images\Screens\3 Game Over Screen\2 Quit.png" />
     <Content Include="Content\Images\Screens\3 Game Over Screen\1 Try Again.png" />
     <Content Include="Content\Images\Screens\Small Cursor.png" />
+    <Content Include="Content\Images\Screens\V Small Cursor.png" />
     <Content Include="Content\Images\Walls\Area1\B East.png" />
     <Content Include="Content\Images\Walls\Area1\C North.png" />
     <Content Include="Content\Images\Walls\Area1\D South.png" />

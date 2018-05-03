@@ -22,5 +22,25 @@ namespace Assignment_Adventure_Game
             Function = functionIn;
             HighlightedStatus = highlightedStatusIn;
         }
+
+        public void GetHighlightedStatus(bool statusIn)
+        {
+            HighlightedStatus = statusIn;
+
+            AlterColour();
+        }
+
+        public void AlterColour()
+        {
+            if (HighlightedStatus == true)
+            {
+                Tint = Color.MonoGameOrange;
+            }
+
+            else
+            {
+                Tint = Color.White;
+            }
+        }
     }
 }

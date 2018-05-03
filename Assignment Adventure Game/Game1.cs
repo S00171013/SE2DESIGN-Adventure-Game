@@ -29,6 +29,8 @@ namespace Assignment_Adventure_Game
         #endregion
 
         #region Declare menu option objects for each of the game's screens.
+        // General
+        MenuOption selectedOption;
         // Main Menu
         MenuOption startGameOp, viewControlsOp, quitGameOp;
         // Controls Menu
@@ -150,11 +152,11 @@ namespace Assignment_Adventure_Game
                 Color.White, 1, "Quit Game", false);
 
             // Controls           
-            returnToTitleOp = new MenuOption(this, controlsTextures["1 Return to Title"], new Vector2(GraphicsDevice.Viewport.Width-controlsTextures["1 Return to Title"].Width, 480),
-                Color.White, 1, "Return to Title", false);
+            returnToTitleOp = new MenuOption(this, controlsTextures["1 Return to Title"], new Vector2(GraphicsDevice.Viewport.Width - controlsTextures["1 Return to Title"].Width, 480),
+                Color.White, 1, "Return to Title", false);          
 
             // Game Over
-            tryAgainOp = new MenuOption(this, gameOverTextures["1 Try Again"], new Vector2(GraphicsDevice.Viewport.Width/2 - gameOverTextures["1 Try Again"].Width/2, 600),
+            tryAgainOp = new MenuOption(this, gameOverTextures["1 Try Again"], new Vector2(GraphicsDevice.Viewport.Width / 2 - gameOverTextures["1 Try Again"].Width / 2, 600),
                 Color.White, 1, "Try Again", false);
 
             tryAgainOp.GetHighlightedStatus(true);
@@ -170,10 +172,10 @@ namespace Assignment_Adventure_Game
 
             // Create cursor and set it's initial position to that of the first main menu option.
             cursor = new Cursor(this, Content.Load<Texture2D>("Images/Screens/V Small Cursor"),
-                new Vector2(startGameOp.Position.X-30, startGameOp.Position.Y+30));
+                new Vector2(startGameOp.Position.X - 30, startGameOp.Position.Y + 30));
 
             // Set initial gameplay state.
-            currentState = gameState.GAMEOVER;
+            currentState = gameState.TITLE;
 
             #region Load Player.
             #region Load Idle Player sprites.
@@ -348,11 +350,22 @@ namespace Assignment_Adventure_Game
             {
                 case gameState.TITLE:
                     // Update the cursor so that it can move between options.
-                    cursor.Update(mainMenuOptions);                   
+                    cursor.Update(mainMenuOptions);
+
+                    // Handle selecting an option.
+                    if (InputManager.IsKeyPressed(Keys.Enter))
+                    {
+                        ChangeScreen(mainMenuOptions);                                   
+                    }
                     break;
 
                 case gameState.CONTROLS:
                     cursor.Update(controlsOptions);
+
+                    if (InputManager.IsKeyPressed(Keys.Enter))
+                    {
+                        ChangeScreen(controlsOptions);
+                    }
                     break;
 
                 case gameState.GAMEPLAY:
@@ -428,6 +441,11 @@ namespace Assignment_Adventure_Game
 
                 case gameState.GAMEOVER:
                     cursor.Update(gameOverOptions);
+
+                    if (InputManager.IsKeyPressed(Keys.Enter))
+                    {
+                        ChangeScreen(gameOverOptions);
+                    }
                     break;
             }
 
@@ -450,7 +468,7 @@ namespace Assignment_Adventure_Game
                 case gameState.TITLE:
                     #region What to draw on the title screen.
                     // Display background and title.
-                    spriteBatch.Draw(mainMenuTextures["2 Mansion Background"], new Vector2(0, 0), Color.White);
+                    spriteBatch.Draw(mainMenuTextures["2 Mansion Background"], new Vector2(0, 0), Color.Gray);
                     spriteBatch.Draw(mainMenuTextures["3 Title"], new Vector2(450, 240), Color.White);
 
                     // Display menu options.
@@ -470,14 +488,14 @@ namespace Assignment_Adventure_Game
                 case gameState.CONTROLS:
                     #region What to draw on the controls screen.
                     spriteBatch.Draw(controlsTextures["0 Controls Screen 3"], new Vector2(0, 0), Color.White);
-                  
+
                     for (int i = 0; i < controlsOptions.Length; i++)
                     {
                         controlsOptions[i].Draw(spriteBatch);
                     }
 
                     // Update the menu's "Start Game" option.
-                    startGameOp.Position = new Vector2(GraphicsDevice.Viewport.Width - startGameOp.Image.Width, 420);              
+                    startGameOp.Position = new Vector2(GraphicsDevice.Viewport.Width - startGameOp.Image.Width, 420);
 
                     cursor.Draw(spriteBatch);
                     #endregion
@@ -503,7 +521,7 @@ namespace Assignment_Adventure_Game
                     for (int i = 0; i < controlsOptions.Length; i++)
                     {
                         gameOverOptions[i].Draw(spriteBatch);
-                    }                   
+                    }
 
                     cursor.Draw(spriteBatch);
                     #endregion
@@ -513,6 +531,52 @@ namespace Assignment_Adventure_Game
             spriteBatch.End();
 
             base.Draw(gameTime);
-        }     
+        }
+
+        private void ChangeScreen(MenuOption[] optionsIn)
+        {
+            // Determine which option has been selected.
+            for (int i = 0; i < mainMenuOptions.Length; i++)
+            {
+                if (mainMenuOptions[i].HighlightedStatus == true)
+                {
+                    selectedOption = mainMenuOptions[i];
+                    break;
+                }
+            }
+
+            // Change screen according to the selected option's function.
+            switch (selectedOption.Function)
+            {
+                case "Start Game":
+                    currentState = gameState.GAMEPLAY;
+                    cursor.Position = new Vector2(startGameOp.Position.X - 30, startGameOp.Position.Y + 30);
+                    break;
+
+                case "View Controls":                 
+                    currentState = gameState.CONTROLS;
+                    cursor.selectCounter = 0;
+                    cursor.Position = Vector2.Lerp(cursor.Position, new Vector2(startGameOp.Position.X - 30, startGameOp.Position.Y + 30), 1);
+                    break;
+
+                case "Quit Game":
+                    Exit();
+                    break;
+
+                case "Return to Title":
+                    currentState = gameState.TITLE;
+                    cursor.Position = new Vector2(startGameOp.Position.X - 30, startGameOp.Position.Y + 30);
+                    break;
+
+                case "Try Again":
+                    currentState = gameState.TITLE;
+                    cursor.Position = new Vector2(startGameOp.Position.X - 30, startGameOp.Position.Y + 30);
+                    break;
+
+                case "Quit":
+                    Exit();
+                    break;
+            }
+        }
     }
 }

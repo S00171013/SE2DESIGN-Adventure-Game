@@ -14,7 +14,7 @@ namespace Assignment_Adventure_Game
         protected Game myGame;
 
         private float angle = 0;
-        private int selectCounter = 0;
+        public int selectCounter = 0;
 
         // Cursor properties.
         public Texture2D Texture { get; }

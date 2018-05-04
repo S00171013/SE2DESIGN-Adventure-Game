@@ -78,8 +78,12 @@ namespace Assignment_Adventure_Game
         Room currentRoom, room1, room2, room3;
         #endregion
 
-        // Sound Effects
-        SoundEffect collect;
+        #region Sound Effects
+        // UI
+        Dictionary<string, SoundEffect> sfxUI = new Dictionary<string, SoundEffect>();
+        // Gameplay       
+        Dictionary<string, SoundEffect> sfxGameplay = new Dictionary<string, SoundEffect>();
+        #endregion
 
         public Game1()
         {
@@ -129,6 +133,14 @@ namespace Assignment_Adventure_Game
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            // Set initial gameplay state.
+            currentState = gameState.TITLE;
+
+            #region Load SFX
+            sfxUI = Loader.ContentLoad<SoundEffect>(Content, "SFX/0 UI Sounds");
+            sfxGameplay = Loader.ContentLoad<SoundEffect>(Content, "SFX/1 Gameplay Sounds");
+            #endregion
+
             #region Load UI textures
             // Main menu textures.
             mainMenuTextures = Loader.ContentLoad<Texture2D>(Content, "Images/Screens/1 Main Menu");
@@ -172,10 +184,7 @@ namespace Assignment_Adventure_Game
 
             // Create cursor and set it's initial position to that of the first main menu option.
             cursor = new Cursor(this, Content.Load<Texture2D>("Images/Screens/V Small Cursor"),
-                new Vector2(startGameOp.Position.X - 30, startGameOp.Position.Y + 30));
-
-            // Set initial gameplay state.
-            currentState = gameState.TITLE;
+                new Vector2(startGameOp.Position.X - 30, startGameOp.Position.Y + 30), sfxUI["Navigate"]);            
 
             #region Load Player.
             #region Load Idle Player sprites.
@@ -314,10 +323,7 @@ namespace Assignment_Adventure_Game
             room1.GetExits(room1Exits);
             room2.GetExits(room2Exits);
             room3.GetExits(room3Exits);
-            #endregion
-
-            // Load collect sound effect.
-            collect = Content.Load<SoundEffect>("SFX/collect");
+            #endregion          
 
             // Set initial room.
             currentRoom = room1;
@@ -420,8 +426,7 @@ namespace Assignment_Adventure_Game
                         {
                             itemToAdd = item;
 
-                            // Play sound effect.
-                            collect.Play();
+                            sfxGameplay["Collect"].Play();
                             break;
                         }
                     }
@@ -480,6 +485,8 @@ namespace Assignment_Adventure_Game
                     // Update the menu's "Start Game" option. This must be done since this option is shared between the title screen and the controls menu.
                     startGameOp.Position = new Vector2(GraphicsDevice.Viewport.Width / 2 - mainMenuTextures["4 Start Game"].Width / 2, 440);
 
+                    cursor.Position = Vector2.Lerp(cursor.Position, new Vector2(mainMenuOptions[cursor.selectCounter].Position.X - 30, mainMenuOptions[cursor.selectCounter].Position.Y + 30), 1);
+                    
                     // Draw the cursor.
                     cursor.Draw(spriteBatch);
                     #endregion
@@ -527,7 +534,7 @@ namespace Assignment_Adventure_Game
                     }
 
                     // Ensure the cursor moves to the appropriate position when changing screens.
-                    cursor.Position = Vector2.Lerp(cursor.Position, new Vector2(controlsOptions[cursor.selectCounter].Position.X - 30, controlsOptions[cursor.selectCounter].Position.Y + 30), 1);
+                    cursor.Position = Vector2.Lerp(cursor.Position, new Vector2(gameOverOptions[cursor.selectCounter].Position.X - 30, gameOverOptions[cursor.selectCounter].Position.Y + 30), 1);
 
                     cursor.Draw(spriteBatch);
                     #endregion
@@ -541,6 +548,9 @@ namespace Assignment_Adventure_Game
 
         private void ChangeScreen(MenuOption[] optionsIn)
         {
+            // Play confirm sound effect.
+            sfxUI["Confirm"].Play();
+
             // Determine which option has been selected.
             for (int i = 0; i < optionsIn.Length; i++)
             {
@@ -549,20 +559,18 @@ namespace Assignment_Adventure_Game
                     selectedOption = optionsIn[i];
                     break;
                 }
-            }
+            }           
 
             // Change screen according to the selected option's function.
             switch (selectedOption.Function)
             {
                 case "Start Game":
-                    currentState = gameState.GAMEPLAY;
-                    cursor.Position = new Vector2(startGameOp.Position.X - 30, startGameOp.Position.Y + 30);
+                    currentState = gameState.GAMEPLAY;                  
                     break;
 
                 case "View Controls":                 
                     currentState = gameState.CONTROLS;
-                    cursor.selectCounter = 0;
-                    cursor.Position = Vector2.Lerp(cursor.Position, new Vector2(startGameOp.Position.X - 30, startGameOp.Position.Y + 30), 1);
+                    //cursor.selectCounter = 0;                   
                     break;
 
                 case "Quit Game":
@@ -570,19 +578,17 @@ namespace Assignment_Adventure_Game
                     break;
                    
                 case "Return to Title":
-                    currentState = gameState.TITLE;
-                    cursor.Position = new Vector2(startGameOp.Position.X - 30, startGameOp.Position.Y + 30);
+                    currentState = gameState.TITLE;                   
                     break;
 
                 case "Try Again":
-                    currentState = gameState.TITLE;
-                    cursor.Position = new Vector2(startGameOp.Position.X - 30, startGameOp.Position.Y + 30);
+                    currentState = gameState.TITLE;              
                     break;
 
                 case "Quit":
                     Exit();
                     break;
-            }
+            }           
         }
     }
 }

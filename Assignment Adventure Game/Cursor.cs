@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -20,13 +21,15 @@ namespace Assignment_Adventure_Game
         public Texture2D Texture { get; }
         public Vector2 Position { get; set; }
         public Rectangle BoundingRectangle { get; set; }
+        public SoundEffect NavigateSound { get; }
         
 
-        public Cursor(Game1 gameIn, Texture2D textureIn, Vector2 positionIn)
+        public Cursor(Game1 gameIn, Texture2D textureIn, Vector2 positionIn, SoundEffect navigateSoundIn)
         {
             myGame = gameIn;
             Texture = textureIn;
             Position = positionIn;
+            NavigateSound = navigateSoundIn;
 
             BoundingRectangle = new Rectangle((int)Position.X, (int)Position.Y, Texture.Width, Texture.Height);           
         } 
@@ -76,6 +79,9 @@ namespace Assignment_Adventure_Game
             optionsIn[selectCounter].GetHighlightedStatus(true);
 
             Position = Vector2.Lerp(Position, new Vector2(optionsIn[selectCounter].Position.X - 30, optionsIn[selectCounter].Position.Y + 30), 1f);
+
+            // Play navigation sound effect.
+            NavigateSound.Play();
         }
 
         private void MoveUp(MenuOption[] optionsIn)
@@ -98,6 +104,8 @@ namespace Assignment_Adventure_Game
             optionsIn[selectCounter].GetHighlightedStatus(true);
 
             Position = Vector2.Lerp(Position, new Vector2(optionsIn[selectCounter].Position.X - 30, optionsIn[selectCounter].Position.Y + 30), 1f);
+
+            NavigateSound.Play();
         }
     }
 }

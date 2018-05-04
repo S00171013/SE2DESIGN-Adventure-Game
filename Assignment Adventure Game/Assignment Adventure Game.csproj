@@ -111,8 +111,10 @@
     <Content Include="Content\Images\Weapons\G Launcher.png" />
     <Content Include="Content\Images\Weapons\Pistol.png" />
     <Content Include="Content\Images\Weapons\SMG.png" />
-    <Content Include="Content\SFX\collect.wav" />
-    <Content Include="Content\SFX\Title Call.wav" />
+    <Content Include="Content\SFX\0 UI Sounds\Navigate.wav" />
+    <Content Include="Content\SFX\0 UI Sounds\Confirm.wav" />
+    <Content Include="Content\SFX\1 Gameplay Sounds\Collect.wav" />
+    <Content Include="Content\SFX\0 UI Sounds\Title Call.wav" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>

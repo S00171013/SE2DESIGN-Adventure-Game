@@ -397,12 +397,6 @@
 /processorParam:TextureFormat=Color
 /build:Images/Doors/C Gold/Gold Door West.png
 
-#begin SFX/collect.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SFX/collect.wav
-
 #begin Images/Screens/2 Controls Screen/0 Controls Screen 3.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -559,12 +553,6 @@
 /processorParam:TextureFormat=Color
 /build:Images/Screens/1 Main Menu/6 Quit Game.png
 
-#begin SFX/Title Call.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SFX/Title Call.wav
-
 #begin Images/Screens/V Small Cursor.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -576,4 +564,28 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Images/Screens/V Small Cursor.png
+
+#begin SFX/0 UI Sounds/Navigate.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/0 UI Sounds/Navigate.wav
+
+#begin SFX/0 UI Sounds/Title Call.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/0 UI Sounds/Title Call.wav
+
+#begin SFX/1 Gameplay Sounds/Collect.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/1 Gameplay Sounds/Collect.wav
+
+#begin SFX/0 UI Sounds/Confirm.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/0 UI Sounds/Confirm.wav
 

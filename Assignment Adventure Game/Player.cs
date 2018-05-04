@@ -14,9 +14,10 @@ namespace Assignment_Adventure_Game
         protected Game myGame;
         Viewport gameScreen;
 
-        // Properties.
-        public int MaxHealth { get; set; }
+        // Properties.      
         public int Health { get; set; }
+        public int Armour { get; set; }
+        public Dictionary<string, Texture2D> HUDElements { get; }
 
         // Fields - public for now.
         public List<Item> Inventory;
@@ -49,7 +50,7 @@ namespace Assignment_Adventure_Game
         #endregion
 
         // Constructor.
-        public Player(Game gameIn, Texture2D image, Vector2 position, Color tint, int frameCount) : base(image, position, tint, frameCount)
+        public Player(Game gameIn, Texture2D image, Vector2 position, Color tint, int frameCount, Dictionary<string, Texture2D> hudElementsIn) : base(image, position, tint, frameCount)
         {
             myGame = gameIn;
                                  
@@ -58,7 +59,14 @@ namespace Assignment_Adventure_Game
 
             // Set up player inventory and weapons lists.
             Inventory = new List<Item>();
-            Weapons = new List<Weapon>();
+            Weapons = new List<Weapon>();          
+
+            // Set HUD elements.
+            HUDElements = hudElementsIn;
+
+            // Set health.
+            Health = 100;
+            Armour = 100;
         }
 
         public virtual void Update(GameTime gameTime)
@@ -78,8 +86,32 @@ namespace Assignment_Adventure_Game
             // Update the player's inventory.
             foreach(Item item in this.Inventory)
             {
-                item.Update(gameTime);
-                
+                item.Update(gameTime);          
+            }
+        }
+
+        public void DrawPlayerHUD(SpriteBatch spIn, SpriteFont fontIn)
+        {
+            // Draw the HUD Background.
+            spIn.Draw(HUDElements["HUD Background"], new Vector2(-8, 658), Color.White);
+
+            // Draw the player's health.
+            spIn.Draw(HUDElements["Health Icon"], new Vector2(550, 665), Color.White);
+            spIn.DrawString(fontIn, String.Format("{0}", Health), new Vector2(600, 680), Color.Red);
+
+            // Draw the player's armour.
+            spIn.Draw(HUDElements["Armour Icon"], new Vector2(680, 667), Color.White);
+            spIn.DrawString(fontIn, String.Format("{0}", Armour), new Vector2(735, 680), Color.Blue);
+
+            // Draw the equipped item window.
+            spIn.Draw(HUDElements["Equipped Item Window"], new Vector2(850, 670), Color.White);
+
+            // Draw the currently equipped item.
+            if (EquippedItem != null)
+            {            
+                // Draw the equipped item within the item window. (Position is hard-coded for now.)                 
+                spIn.Draw(EquippedItem.Image, new Vector2(890,
+                   650), Color.White);              
             }
         }
              
@@ -198,6 +230,7 @@ namespace Assignment_Adventure_Game
             if (Bounds.Intersects(itemPickedUp.Bounds))
             {
                 Inventory.Add(itemPickedUp);
+                EquippedItem = itemPickedUp;                
                 return true;
             }
 

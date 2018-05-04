@@ -49,6 +49,12 @@ namespace Assignment_Adventure_Game
         // Declare Player variable.
         Player player;
 
+        // Declare the player's HUD elements.
+        Dictionary<string, Texture2D> hudElements = new Dictionary<string, Texture2D>();
+
+        // Declare font for game information.
+        SpriteFont infoFont;
+
         // Declare player sprites. - Idle and Movement textures.
         Texture2D lookingDown, lookingUp, lookingLeft, lookingRight, movingDown, movingUp, movingLeft, movingRight;
 
@@ -150,6 +156,9 @@ namespace Assignment_Adventure_Game
             gameOverTextures = Loader.ContentLoad<Texture2D>(Content, "Images/Screens/3 Game Over Screen");
             #endregion
 
+            // Load game font.
+            infoFont = Content.Load<SpriteFont>("Info");
+
             #region Create menu options - startGameOp is shared between the main menu and the controls menu.
             // Main
             startGameOp = new MenuOption(this, mainMenuTextures["4 Start Game"], new Vector2(GraphicsDevice.Viewport.Width / 2 - mainMenuTextures["4 Start Game"].Width / 2, 440),
@@ -201,17 +210,23 @@ namespace Assignment_Adventure_Game
             movingDown = Content.Load<Texture2D>("Images/Player/Move Down");
             #endregion
 
+            // Load the player's HUD Elements
+            hudElements = Loader.ContentLoad<Texture2D>(Content, "Images/HUD");
+
             // Load animated player sprite.
             player = new Player(
                 this, // Game
                 lookingDown, // Image
                 new Vector2(300, 300), // Position
                 Color.White, // Colour
-                2); // Frames          
+                2, // Frames  
+                hudElements);         
 
             // Send these textures to the Player class.
             player.GetAnimations(lookingDown, lookingUp, lookingLeft, lookingRight,
                 movingDown, movingUp, movingLeft, movingRight);
+
+
             #endregion
 
             // Load wall textures
@@ -518,6 +533,7 @@ namespace Assignment_Adventure_Game
 
                     // Draw the player.
                     player.Draw(spriteBatch);
+                    player.DrawPlayerHUD(spriteBatch, infoFont);
                     #endregion
                     break;
 
@@ -570,7 +586,7 @@ namespace Assignment_Adventure_Game
 
                 case "View Controls":                 
                     currentState = gameState.CONTROLS;
-                    //cursor.selectCounter = 0;                   
+                                   
                     break;
 
                 case "Quit Game":

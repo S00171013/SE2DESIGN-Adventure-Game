@@ -77,6 +77,10 @@
     <Content Include="Content\Images\Doors\Door 2.png" />
     <Content Include="Content\Images\Doors\Door 3.png" />
     <Content Include="Content\Images\Floors\Wood Flooring.png" />
+    <Content Include="Content\Images\HUD\Armour Icon.png" />
+    <Content Include="Content\Images\HUD\Equipped Item Window.png" />
+    <Content Include="Content\Images\HUD\Health Icon.png" />
+    <Content Include="Content\Images\HUD\HUD Background.png" />
     <Content Include="Content\Images\Items\Key 1.png" />
     <Content Include="Content\Images\Items\Key 2.png" />
     <Content Include="Content\Images\Items\Key 3.png" />
@@ -120,6 +124,7 @@
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
     <None Include="app.manifest" />
+    <None Include="Content\Info.spritefont" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\Images\Doors\D Green\" />

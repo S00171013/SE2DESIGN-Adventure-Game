@@ -585,8 +585,7 @@ namespace Assignment_Adventure_Game
                     break;
 
                 case "View Controls":                 
-                    currentState = gameState.CONTROLS;
-                                   
+                    currentState = gameState.CONTROLS;                       
                     break;
 
                 case "Quit Game":

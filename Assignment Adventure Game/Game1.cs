@@ -174,7 +174,7 @@ namespace Assignment_Adventure_Game
 
             // Controls           
             returnToTitleOp = new MenuOption(this, controlsTextures["1 Return to Title"], new Vector2(GraphicsDevice.Viewport.Width - controlsTextures["1 Return to Title"].Width, 480),
-                Color.White, 1, "Return to Title", false);          
+                Color.White, 1, "Return to Title", false);
 
             // Game Over
             tryAgainOp = new MenuOption(this, gameOverTextures["1 Try Again"], new Vector2(GraphicsDevice.Viewport.Width / 2 - gameOverTextures["1 Try Again"].Width / 2, 600),
@@ -193,7 +193,7 @@ namespace Assignment_Adventure_Game
 
             // Create cursor and set it's initial position to that of the first main menu option.
             cursor = new Cursor(this, Content.Load<Texture2D>("Images/Screens/V Small Cursor"),
-                new Vector2(startGameOp.Position.X - 30, startGameOp.Position.Y + 30), sfxUI["Navigate"]);            
+                new Vector2(startGameOp.Position.X - 30, startGameOp.Position.Y + 30), sfxUI["Navigate"]);
 
             #region Load Player.
             #region Load Idle Player sprites.
@@ -220,7 +220,7 @@ namespace Assignment_Adventure_Game
                 new Vector2(300, 300), // Position
                 Color.White, // Colour
                 2, // Frames  
-                hudElements);         
+                hudElements);
 
             // Send these textures to the Player class.
             player.GetAnimations(lookingDown, lookingUp, lookingLeft, lookingRight,
@@ -376,8 +376,11 @@ namespace Assignment_Adventure_Game
                     // Handle selecting an option.
                     if (InputManager.IsKeyPressed(Keys.Enter))
                     {
-                        ChangeScreen(mainMenuOptions);                                   
+                        ChangeScreen(mainMenuOptions);
                     }
+                   
+                    CheckMouseClick(mainMenuOptions);
+
                     break;
 
                 case gameState.CONTROLS:
@@ -387,6 +390,8 @@ namespace Assignment_Adventure_Game
                     {
                         ChangeScreen(controlsOptions);
                     }
+
+                    CheckMouseClick(controlsOptions);
                     break;
 
                 case gameState.GAMEPLAY:
@@ -466,6 +471,8 @@ namespace Assignment_Adventure_Game
                     {
                         ChangeScreen(gameOverOptions);
                     }
+
+                    CheckMouseClick(gameOverOptions);
                     break;
             }
 
@@ -501,7 +508,7 @@ namespace Assignment_Adventure_Game
                     startGameOp.Position = new Vector2(GraphicsDevice.Viewport.Width / 2 - mainMenuTextures["4 Start Game"].Width / 2, 440);
 
                     cursor.Position = Vector2.Lerp(cursor.Position, new Vector2(mainMenuOptions[cursor.selectCounter].Position.X - 30, mainMenuOptions[cursor.selectCounter].Position.Y + 30), 1);
-                    
+
                     // Draw the cursor.
                     cursor.Draw(spriteBatch);
                     #endregion
@@ -509,7 +516,7 @@ namespace Assignment_Adventure_Game
 
                 case gameState.CONTROLS:
                     #region What to draw on the controls screen.
-                    spriteBatch.Draw(controlsTextures["0 Controls Screen 3"], new Vector2(0, 0), Color.White);
+                    spriteBatch.Draw(controlsTextures["0 Controls Screen 3"], new Vector2(0, 0), Color.White);                 
 
                     // Ensure the cursor moves to the appropriate position when changing screens.
                     cursor.Position = Vector2.Lerp(cursor.Position, new Vector2(controlsOptions[cursor.selectCounter].Position.X - 30, controlsOptions[cursor.selectCounter].Position.Y + 30), 1);
@@ -575,35 +582,70 @@ namespace Assignment_Adventure_Game
                     selectedOption = optionsIn[i];
                     break;
                 }
-            }           
+            }
 
             // Change screen according to the selected option's function.
             switch (selectedOption.Function)
             {
                 case "Start Game":
-                    currentState = gameState.GAMEPLAY;                  
+                    currentState = gameState.GAMEPLAY;
                     break;
 
-                case "View Controls":                 
-                    currentState = gameState.CONTROLS;                       
+                case "View Controls":
+                    currentState = gameState.CONTROLS;
                     break;
 
                 case "Quit Game":
                     Exit();
                     break;
-                   
+
                 case "Return to Title":
-                    currentState = gameState.TITLE;                   
+                    currentState = gameState.TITLE;
                     break;
 
                 case "Try Again":
-                    currentState = gameState.TITLE;              
+                    currentState = gameState.TITLE;
                     break;
 
                 case "Quit":
                     Exit();
                     break;
-            }           
+            }
+        }
+
+        private void CheckMouseClick(MenuOption[] menuOptionsIn)
+        {            
+            // Declare variable to keep track of mouse state.
+            var mouseState = Mouse.GetState();
+
+            var mousePosition = new Point(mouseState.X, mouseState.Y);
+
+            // If the user clicks on the screen.
+            if (mouseState.LeftButton == ButtonState.Pressed)
+            {
+                sfxUI["Navigate"].Play();
+
+                // Find and Un-highlight the previously highlighted option.
+                for (int i = 0; i < menuOptionsIn.Length; i++)
+                {
+                    if (menuOptionsIn[i].HighlightedStatus == true)
+                    {
+                        menuOptionsIn[i].GetHighlightedStatus(false);
+                        break;
+                    }
+                }
+
+                // Then Highlight the newest option.                       
+                for (int i = 0; i < menuOptionsIn.Length; i++)
+                {
+                    if (menuOptionsIn[i].CheckClicked(mousePosition))
+                    {
+                        menuOptionsIn[i].GetHighlightedStatus(true);
+                        cursor.selectCounter = i;
+                        break;
+                    }
+                }
+            }
         }
     }
 }

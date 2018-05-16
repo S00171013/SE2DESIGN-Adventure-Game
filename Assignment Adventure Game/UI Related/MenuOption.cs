@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace Assignment_Adventure_Game
 {
@@ -41,6 +42,17 @@ namespace Assignment_Adventure_Game
             {
                 Tint = Color.White;
             }
+        }
+
+        public bool CheckClicked(Point mousePosIn)
+        {          
+            if (Bounds.Contains(mousePosIn))
+            {
+                return true;
+            }
+
+            else return false;
+
         }
     }
 }
